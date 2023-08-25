@@ -21,6 +21,7 @@ public class Main {
  * 
  */
 	//TODO: This is completely broken! Fix it!
+	//N=4 starts to break. Will need to debug it.
 
 	//This is going to be less efficient than what they describe because, for now, I just want it to work.
 	
@@ -31,7 +32,7 @@ public class Main {
 		
 		initLowerTwoDissapeared();
 		
-		solve(1);
+		solve(3);
 	}
 	
 
@@ -45,12 +46,9 @@ public class Main {
 
 	public static final int FILL_SQUARE_INDEX_DISPLACEMENT = 2;
 
-	public static final boolean INIT_LOWER_BORDER_UNTOUCHED = false;
 	public static final boolean INIT_UPPER_BORDER_UNTOUCHED = false;
+	public static final boolean INIT_LOWER_BORDER_UNTOUCHED = false;
 	
-
-	public static final  boolean UPPER_BORDER_TOUCHED = false;
-	public static final boolean LOWER_BORDER_TOUCHED = false;
 	
 	//Matrix is just a copy of what's in the paper
 	public static int transitionMatrix[][][] =
@@ -107,7 +105,8 @@ public class Main {
 	public static final int CELL_MUST_BE_OCCUPIED = -2;
 	public static final int ERROR_SITUATION_SHOUND_NOT_HAPPEN = -3;
 	
-	
+
+	public static final BigInteger TWO = new BigInteger("2");
 	
 	public static BigInteger solve(int numSquares) {
 		
@@ -131,11 +130,11 @@ public class Main {
 			prevConfigs.put(seed, PartialGen.hardCopy(curPartial));
 			
 			
-			
-			for(int length=1; length <= numSquares - width + 1; length++) {
+			//TODO: I added +5 at the end just in case...
+			for(int length=1; length <= numSquares - width + 1 + 5; length++) {
 				
-				int origTop = 0;
-				int origLeft = 0;
+				System.out.println("Current length: " + length);
+				System.out.println();
 				
 				for(int i=0; i<width; i++) {
 					
@@ -159,6 +158,9 @@ public class Main {
 						boolean origUpperBorderTouched = ((curSignature % 4) /2) == 1;
 						boolean origLowerBorderTouched = (curSignature % 2) == 1;
 
+						int origTop = 0;
+						int origLeft = 0;
+						
 						if(i == 0) {
 							origTop = 0;
 						} else {
@@ -176,9 +178,9 @@ public class Main {
 							boundaryLine =  getBoundaryLineFromSignature(curSignature, width);
 							
 							int newTop = transitionMatrix[origLeft][origTop][NEW_TOP_EMPTY_SQUARE_INDEX + FILL_SQUARE_INDEX_DISPLACEMENT * fillSquare];
-							int newCurCell = transitionMatrix[origLeft][origTop][NEW_LEFT_EMPTY_SQUARE_INDEX + FILL_SQUARE_INDEX_DISPLACEMENT * fillSquare];
+							int newBottom = transitionMatrix[origLeft][origTop][NEW_LEFT_EMPTY_SQUARE_INDEX + FILL_SQUARE_INDEX_DISPLACEMENT * fillSquare];
 							
-							if(newTop < 0 || newCurCell < 0) {
+							if(newTop < 0 || newBottom < 0) {
 								
 								if(newTop == ABANDONED_ISOLATED_CELL_POSSIBLY_OK) {
 									
@@ -205,7 +207,7 @@ public class Main {
 										
 										//At this point, we're just done with making an animal 
 										newTop = 0;
-										newCurCell = 0;
+										newBottom = 0;
 									}
 								
 								} else if(newTop == CELL_MUST_BE_OCCUPIED) {
@@ -335,9 +337,10 @@ public class Main {
 							
 							if(i>0) {
 								boundaryLine[i - 1] = newTop;
-							} else {
-								boundaryLine[i] = newCurCell;
 							}
+							
+							boundaryLine[i] = newBottom;
+							
 							
 							boolean upperBorderTouched = origUpperBorderTouched;
 							boolean lowerBorderTouuched = origLowerBorderTouched;
@@ -400,54 +403,41 @@ public class Main {
 						System.exit(1);
 					}
 					
-				} else if(length < width) {
+				}
+				
 					
-					int NUM_TO_REMOVE = 4;
+				int NUM_TO_REMOVE = 4;
 
-					for(int i=0; i<NUM_TO_REMOVE; i++) {
-						boolean firstParam = i / 2 == 1;
-						boolean secondParam = i % 2 == 1;
+				for(int i=0; i<NUM_TO_REMOVE; i++) {
+					boolean upperTouched = i / 2 == 1;
+					boolean lowerTouched = i % 2 == 1;
+					
+					long signatureToRemove = getSignature(createIntialBoundaryLine(width), upperTouched, lowerTouched);
+					
+					
+					if(prevConfigs.containsKey(signatureToRemove)) {
 						
-						long signatureToRemove = getSignature(createIntialBoundaryLine(width), firstParam, secondParam);
-						
-						if(length == 1) {
-							if(i == 0 && !prevConfigs.containsKey(signatureToRemove)) {
-								System.out.println("ERROR: start config to remove was not found");
-								System.exit(1);
-							} else if(i > 0 && prevConfigs.containsKey(signatureToRemove)) {
-								System.out.println("ERROR: Found an impossible signature");
-								System.exit(1);
+						if(length > width && upperTouched && lowerTouched) {
+							BigInteger numSolutions = new BigInteger("" + prevConfigs.get(signatureToRemove).numAnimals[numSquares]);
+							
+							if(length == width + 1) {
+								if(numSolutions.compareTo(BigInteger.ZERO) > 0) {
+									System.out.println("Adding " + numSolutions + " for length = " + length + " and width " + width + "(Deduplicate)");
+								}
+								ret = ret.add(numSolutions);
+							} else {
+								if(numSolutions.compareTo(BigInteger.ZERO) > 0) {
+									System.out.println("Adding 2 * " + numSolutions + " = " + numSolutions.multiply(TWO) + " for length = " + length + " and width " + width);
+								}
+								ret = ret.add(numSolutions.multiply(TWO));								
 							}
 						}
 						
-						if(prevConfigs.containsKey(signatureToRemove)) {
-							prevConfigs.remove(signatureToRemove);
-						}
-						
-						
+						prevConfigs.remove(signatureToRemove);
 					}
-
-				} else if(length == width) {
-			    	
-			    	//Deduplicate if length == width:
-			    	
-			    	Iterator<Map.Entry<Long, PartialGen>> iterator = prevConfigs.entrySet().iterator();					
 					
-				    while (iterator.hasNext()) {
-				    	
-				    	Map.Entry<Long, PartialGen> entry = iterator.next();
-				    	long potentialSolutionSignature = entry.getKey();
-
-				    	boolean upperBorderTouched = ((potentialSolutionSignature % 4) /2) == 1;
-						boolean lowerBorderTouched = (potentialSolutionSignature % 2) == 1;
-
-						if(upperBorderTouched && lowerBorderTouched) {
-							ret = ret.subtract(new BigInteger("" + entry.getValue().numAnimals[numSquares]));
-						}
-						
-						
-				    }
-			    }
+					
+				}
 	
 			    System.out.println("New length");
 			    System.out.println();
@@ -459,23 +449,6 @@ public class Main {
 		} //END big width loop
 		
 		
-		BigInteger TWO = new BigInteger("2");
-		Iterator<Map.Entry<Long, PartialGen>> iterator = prevConfigs.entrySet().iterator();					
-		
-	    while (iterator.hasNext()) {
-	    	
-	    	Map.Entry<Long, PartialGen> entry = iterator.next();
-	    	long potentialSolutionSignature = entry.getKey();
-
-	    	boolean upperBorderTouched = ((potentialSolutionSignature % 4) /2) == 1;
-			boolean lowerBorderTouched = (potentialSolutionSignature % 2) == 1;
-
-			if(upperBorderTouched && lowerBorderTouched) {
-				ret = ret.add(TWO.multiply(new BigInteger("" + entry.getValue().numAnimals[numSquares])));
-			}
-			
-	    }
-	    
 	    System.out.println("Final number for N = " + numSquares + ": " + ret);
 		
 		return ret;
@@ -564,7 +537,7 @@ public class Main {
 				fakeBoundary[0] = i;
 				fakeBoundary[1] = j;
 				
-				System.out.println("Test: " + fakeBoundary[0] + ", " + fakeBoundary[1]);
+				//System.out.println("Test: " + fakeBoundary[0] + ", " + fakeBoundary[1]);
 				
 				boolean tmp1 = false;
 				boolean tmp2 = false;
@@ -584,15 +557,15 @@ public class Main {
 					int newBoundary[] =  getBoundaryLineFromSignature(signature, fakeBoundary.length);
 					
 					if(newBoundary.length != fakeBoundary.length) {
-						System.out.println("OOPS2!");
+						System.out.println("signature test: OOPS2!");
 						System.exit(1);
 					}
 					
-					System.out.println();
+					//System.out.println();
 					for(int i2=0; i2<newBoundary.length; i2++) {
-						System.out.println(newBoundary[i2] + " vs " +  fakeBoundary[i2]);
+						//System.out.println(newBoundary[i2] + " vs " +  fakeBoundary[i2]);
 						if(newBoundary[i2] != fakeBoundary[i2]) {
-							System.out.println("OOPS!");
+							System.out.println("signature test: OOPS!");
 							
 							System.exit(1);
 							
