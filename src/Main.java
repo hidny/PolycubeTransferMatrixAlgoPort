@@ -32,13 +32,13 @@ public class Main {
 		
 		initLowerTwoDissapeared();
 		
-		solve(3);
+		solve(4);
 	}
 	
 
 	//Really inefficient storage method...
-	public static HashMap<Long, PartialGen> prevConfigs = new HashMap<Long, PartialGen>();
-	public static HashMap<Long, PartialGen> curConfigs = new HashMap<Long, PartialGen>();
+	public static HashMap<Long, PartialGen> prevConfigs;
+	public static HashMap<Long, PartialGen> curConfigs;
 	
 
 	public static final int NEW_LEFT_EMPTY_SQUARE_INDEX = 0;
@@ -48,6 +48,8 @@ public class Main {
 
 	public static final boolean INIT_UPPER_BORDER_UNTOUCHED = false;
 	public static final boolean INIT_LOWER_BORDER_UNTOUCHED = false;
+	
+	public static final int BOOL_OPTIONS_COUNT = 2;
 	
 	
 	//Matrix is just a copy of what's in the paper
@@ -67,9 +69,9 @@ public class Main {
 	
 	//TODO: what if I did "static {"? Would that be better? 
 	public static void initLowerTwoDissapeared() {
-		lowerTwoDissapeared = new boolean[transitionMatrix.length][transitionMatrix[0].length][transitionMatrix[1].length];
-		lowerFourDissapeared = new boolean[transitionMatrix.length][transitionMatrix[0].length][transitionMatrix[1].length];
-		mergingTwoSeparteSections = new boolean[transitionMatrix.length][transitionMatrix[0].length][transitionMatrix[1].length];
+		lowerTwoDissapeared = new boolean[transitionMatrix.length][transitionMatrix[0].length][BOOL_OPTIONS_COUNT];
+		lowerFourDissapeared = new boolean[transitionMatrix.length][transitionMatrix[0].length][BOOL_OPTIONS_COUNT];
+		mergingTwoSeparteSections = new boolean[transitionMatrix.length][transitionMatrix[0].length][BOOL_OPTIONS_COUNT];
 		
 		for(int i=0; i<lowerTwoDissapeared.length; i++) {
 			for(int j=0; j<lowerTwoDissapeared[0].length; j++) {
@@ -121,12 +123,16 @@ public class Main {
 		
 		for(int width=1; width<=maxWidth; width++) {
 			
+
+			System.out.println("Current width: " + width);
+			System.out.println();
 			
 			PartialGen curPartial = new PartialGen(2 * numSquares);
 			curPartial.numAnimals[0] = 1L;
 			
 			long seed = getSignature(createIntialBoundaryLine(width), INIT_UPPER_BORDER_UNTOUCHED, INIT_LOWER_BORDER_UNTOUCHED);
 			
+			prevConfigs = new HashMap<Long, PartialGen>();
 			prevConfigs.put(seed, PartialGen.hardCopy(curPartial));
 			
 			
@@ -151,15 +157,23 @@ public class Main {
 						PartialGen prevPartialGen = prevConfigs.get(entry.getKey());
 						
 						long curSignature = entry.getKey();
-						System.out.println("Debug: current signature: " + curSignature);
+						
 						
 						int boundaryLine[] =  getBoundaryLineFromSignature(curSignature, width);
 						
 						boolean origUpperBorderTouched = ((curSignature % 4) /2) == 1;
 						boolean origLowerBorderTouched = (curSignature % 2) == 1;
 
+
+						System.out.println("Debug: current signature: " + curSignature);
+
+						System.out.println("Debug before:");
+						debugPrintCurState(boundaryLine, i, origUpperBorderTouched, origLowerBorderTouched);
+
+						
+						
 						int origTop = 0;
-						int origLeft = 0;
+						int origBottom = 0;
 						
 						if(i == 0) {
 							origTop = 0;
@@ -167,7 +181,7 @@ public class Main {
 
 							origTop = boundaryLine[i - 1];
 						}						
-						origLeft = boundaryLine[i];
+						origBottom = boundaryLine[i];
 
 						
 						// Assume there's no new square:
@@ -177,8 +191,12 @@ public class Main {
 							//Let's just be safe...
 							boundaryLine =  getBoundaryLineFromSignature(curSignature, width);
 							
-							int newTop = transitionMatrix[origLeft][origTop][NEW_TOP_EMPTY_SQUARE_INDEX + FILL_SQUARE_INDEX_DISPLACEMENT * fillSquare];
-							int newBottom = transitionMatrix[origLeft][origTop][NEW_LEFT_EMPTY_SQUARE_INDEX + FILL_SQUARE_INDEX_DISPLACEMENT * fillSquare];
+							int newTop = transitionMatrix[origBottom][origTop][NEW_TOP_EMPTY_SQUARE_INDEX + FILL_SQUARE_INDEX_DISPLACEMENT * fillSquare];
+							int newBottom = transitionMatrix[origBottom][origTop][NEW_LEFT_EMPTY_SQUARE_INDEX + FILL_SQUARE_INDEX_DISPLACEMENT * fillSquare];
+							
+							//if(origBottom == 4 && origTop == 0) {
+							//	System.out.println("WHAT!");
+							//}
 							
 							if(newTop < 0 || newBottom < 0) {
 								
@@ -223,8 +241,9 @@ public class Main {
 									System.exit(1);
 								}
 								
-							} else if(lowerTwoDissapeared[origLeft][origTop][NEW_TOP_EMPTY_SQUARE_INDEX + FILL_SQUARE_INDEX_DISPLACEMENT * fillSquare]) {
-								
+							} else if(lowerTwoDissapeared[origBottom][origTop][fillSquare]) {
+
+								//System.exit(1);
 								//boundaryLine
 								int numNestedTwos = 0;
 								
@@ -251,8 +270,9 @@ public class Main {
 									}
 								}
 								
-							} else if(lowerFourDissapeared[origLeft][origTop][NEW_TOP_EMPTY_SQUARE_INDEX + FILL_SQUARE_INDEX_DISPLACEMENT * fillSquare]) {
+							} else if(lowerFourDissapeared[origBottom][origTop][fillSquare]) {
 								
+								//System.exit(1);
 								//boundaryLine
 								int numNestedFours = 0;
 								
@@ -279,9 +299,10 @@ public class Main {
 									}
 								}
 								
-							} else if(mergingTwoSeparteSections[origLeft][origTop][NEW_TOP_EMPTY_SQUARE_INDEX + FILL_SQUARE_INDEX_DISPLACEMENT * fillSquare]) {
-								
-								if(origLeft == 4) {
+							} else if(mergingTwoSeparteSections[origBottom][origTop][fillSquare]) {
+
+								//System.exit(1);
+								if(origBottom == 4) {
 
 									//Also cancel associated 2
 									int numNestedFours = 0;
@@ -333,7 +354,12 @@ public class Main {
 										}
 									}
 								}
+							} else {
+								
 							}
+
+							System.out.println("TEST origBottom and origTop: " + origBottom + ", " + origTop);
+							
 							
 							if(i>0) {
 								boundaryLine[i - 1] = newTop;
@@ -355,6 +381,9 @@ public class Main {
 							
 							long newSignature = getSignature(boundaryLine, upperBorderTouched, lowerBorderTouuched);
 						
+							System.out.println("Debug after " + fillSquare + ":");
+							debugPrintCurState(boundaryLine, i + 1, upperBorderTouched, lowerBorderTouuched);
+							
 							if(fillSquare == 0) {
 								if(curConfigs.containsKey(newSignature)) {
 									curConfigs.put(newSignature, PartialGen.hardCopyMerge(curConfigs.get(newSignature), prevPartialGen));
@@ -389,23 +418,9 @@ public class Main {
 				    prevConfigs = curConfigs;
 
 
-				    System.out.println("New width");
+				    //System.out.println("New width");
 				} //End adding wedges
 
-				if(length == 1) {
-					//Hack to get rid original start conf that should only exist for the 1st column:
-					long startConfToRemove = getSignature(createIntialBoundaryLine(width), INIT_UPPER_BORDER_UNTOUCHED, INIT_LOWER_BORDER_UNTOUCHED);
-					
-					if(prevConfigs.containsKey(startConfToRemove)) {
-						prevConfigs.remove(startConfToRemove);
-					} else {
-						System.out.println("ERROR: start config to remove was not found");
-						System.exit(1);
-					}
-					
-				}
-				
-					
 				int NUM_TO_REMOVE = 4;
 
 				for(int i=0; i<NUM_TO_REMOVE; i++) {
@@ -438,9 +453,13 @@ public class Main {
 					
 					
 				}
+				
+				if(width == 2 && length == 3) {
+					System.out.println("Debug before 20 solutions");
+				}
 	
-			    System.out.println("New length");
-			    System.out.println();
+			    //System.out.println("New length");
+			    //System.out.println();
 				
 			} //END length loop
 			
@@ -473,6 +492,7 @@ public class Main {
 	+ "occupied sites Ncur which have been inserted to the left of the intersection in order to build\r\n"
 	+ "up that particular configuration."
 	*/
+	
 	
 	
 	public static long getSignature(int boundaryLine[], boolean upperBorderTouched, boolean lowerBorderTouuched) {
@@ -577,6 +597,25 @@ public class Main {
 		}
 		
 		
+	}
+	
+	public static void debugPrintCurState(int boundaryLine[], int curI, boolean topTouched, boolean bottomTouched) {
+		
+		System.out.println("-----");
+		if(topTouched) {
+			System.out.println("(Top touched)");
+		}
+		for(int i2=0; i2<boundaryLine.length; i2++) {
+			if(i2 < curI) {
+				System.out.println("   " + boundaryLine[i2]);
+			} else {
+				System.out.println(boundaryLine[i2]);
+			}
+		}
+		if(bottomTouched) {
+			System.out.println("(Bottom touched)");
+		}
+		System.out.println("-----");
 	}
 }
 	//public static int 
