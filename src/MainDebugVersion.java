@@ -3,7 +3,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-public class Main {
+public class MainDebugVersion {
 
 	//goal:
 	// Implement the algo described in https://arxiv.org/pdf/cond-mat/0007239.pdf
@@ -39,7 +39,7 @@ public class Main {
 	
 	public static void testArray() {
 		
-		int MAX = 12;
+		int MAX = 17;
 		
 		BigInteger output[] = new BigInteger[MAX + 1];
 		for(int i=0; i<MAX + 1; i++) {
@@ -52,7 +52,27 @@ public class Main {
 			System.out.println(i + ": " + output[i]);
 		}
 	}
-	
+	/*
+	 * Sequence:
+0: 0
+1: 1
+2: 2
+3: 6
+4: 19
+5: 63
+6: 216
+7: 760
+8: 2725
+9: 9910
+10: 36446
+11: 135268
+12: 505861
+13: 1903890
+14: 7204874
+15: 27394666
+16: 104592937
+17: 400795844
+	 */
 
 	//Really inefficient storage method...
 	public static HashMap<Long, PartialGen> prevConfigs;
@@ -130,6 +150,10 @@ public class Main {
 	
 	public static BigInteger solve(int numSquares) {
 		
+		if(numSquares == 0) {
+			return BigInteger.ONE;
+		}
+
 		//According to the paper, and the weird proof in my head,
 		// if a 'animal' lives in a L*W rect lattice and L>=W, then W <= floor((maxSquares + 1)/2)
 		int maxWidth = Math.floorDiv(numSquares + 1, 2);
