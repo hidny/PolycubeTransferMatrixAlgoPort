@@ -3,7 +3,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-public class MainDebugVersion {
+public class MainDebugFirstVersion {
 
 	//goal:
 	// Implement the algo described in https://arxiv.org/pdf/cond-mat/0007239.pdf
