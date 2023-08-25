@@ -20,9 +20,6 @@ public class MainDebugFirstVersion {
  * Then I'll to do the same thing for 2D reflections.
  * 
  */
-	//TODO: This is completely broken! Fix it!
-	//N=4 starts to break. Will need to debug it.
-
 	//This is going to be less efficient than what they describe because, for now, I just want it to work.
 	
 	public static void main(String args[]) {
@@ -232,16 +229,11 @@ public class MainDebugFirstVersion {
 						// Assume there's no new square:
 						
 						for(int fillSquare=0; fillSquare<2; fillSquare++) {
-						
-							//Let's just be safe...
+
 							boundaryLine =  getBoundaryLineFromSignature(curSignature, width);
 							
 							int newTop = transitionMatrix[origBottom][origTop][NEW_TOP_EMPTY_SQUARE_INDEX + FILL_SQUARE_INDEX_DISPLACEMENT * fillSquare];
 							int newBottom = transitionMatrix[origBottom][origTop][NEW_LEFT_EMPTY_SQUARE_INDEX + FILL_SQUARE_INDEX_DISPLACEMENT * fillSquare];
-							
-							//if(origBottom == 4 && origTop == 0) {
-							//	System.out.println("WHAT!");
-							//}
 							
 							if(newTop < 0 || newBottom < 0) {
 								
@@ -450,7 +442,7 @@ public class MainDebugFirstVersion {
 								}
 							} else {
 								//TODO: "with an addition weight factor u on the source if the new site is occupied"
-								// TOOD: why not just say weight factor of 1??
+								// TOOD: why not just say weight factor of 1?? Update: I still don't know, but I got away with assuming u=1.
 								if(curConfigs.containsKey(newSignature)) {
 									//: adds 1
 									curConfigs.put(newSignature, PartialGen.hardCopyMerge(curConfigs.get(newSignature), PartialGen.hardCopyAdd1SquareThough(prevPartialGen)));
@@ -460,13 +452,6 @@ public class MainDebugFirstVersion {
 								}
 							}
 							
-							//Let's be safe...
-							/*
-							if(i>0) {
-								boundaryLine[i - 1] = origTop;
-							}
-							boundaryLine[i] = origLeft;
-							 */
 						}
 						
 					}
@@ -526,17 +511,16 @@ public class MainDebugFirstVersion {
 	public static long NUM_STATES = 5;
 	
 	
-	//TODO: implement
-	
+	//Observations:
 	//TODO: this won't fit into a long in the future.
 	
-	//TODO: what about the num kink?
-	// AHA: The signatures are updated at every step, so we don;t need the kink
+	// What about the num kink?
+	// AHA: The signatures are updated at every step, so we don't need the kink
 	
 	//Guess based on reading the paper:
 	// We don't need to add it as part of the signature?
 	
-	//TODO: what about the current Num animals? Does that need to be part of signature?
+	//What about the current Num animals? Does that need to be part of signature?
 	//AHA: the num animals is the value of the hash! (The hash value is an array)
 	/*" Firstly, for each configuration we keep track of the current minimum number of\r\n"
 	+ "occupied sites Ncur which have been inserted to the left of the intersection in order to build\r\n"
@@ -668,4 +652,3 @@ public class MainDebugFirstVersion {
 		System.out.println("-----");
 	}
 }
-	//public static int 
