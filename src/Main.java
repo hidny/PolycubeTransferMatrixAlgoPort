@@ -32,7 +32,25 @@ public class Main {
 		
 		initLowerTwoDissapeared();
 		
-		solve(4);
+		//solve(10);
+		
+		testArray();
+	}
+	
+	public static void testArray() {
+		
+		int MAX = 12;
+		
+		BigInteger output[] = new BigInteger[MAX + 1];
+		for(int i=0; i<MAX + 1; i++) {
+			
+			output[i] = solve(i);
+		}
+		
+		System.out.println("Sequence:");
+		for(int i=0; i<output.length; i++) {
+			System.out.println(i + ": " + output[i]);
+		}
 	}
 	
 
@@ -166,7 +184,10 @@ public class Main {
 
 
 						System.out.println("Debug: current signature: " + curSignature);
-
+						
+						System.out.println();
+						System.out.println();
+						System.out.println();
 						System.out.println("Debug before:");
 						debugPrintCurState(boundaryLine, i, origUpperBorderTouched, origLowerBorderTouched);
 
@@ -217,16 +238,28 @@ public class Main {
 										looksGoodSoFar = false;
 									}
 									
-									if( ! looksGoodSoFar ) {
-										
-										//At this point, there's a new graph with a separate component:
-										continue;
-									} else {
+									if( looksGoodSoFar ) {
 										
 										//At this point, we're just done with making an animal 
-										newTop = 0;
-										newBottom = 0;
+										
+										if(length > width && origUpperBorderTouched && origLowerBorderTouched) {
+											BigInteger numSolutions = new BigInteger("" + prevConfigs.get(curSignature).numAnimals[numSquares]);
+											
+											if(length == width + 1) {
+												if(numSolutions.compareTo(BigInteger.ZERO) > 0) {
+													System.out.println("Adding " + numSolutions + " for length = " + length + " and width " + width + "(Deduplicate)");
+												}
+												ret = ret.add(numSolutions);
+											} else {
+												if(numSolutions.compareTo(BigInteger.ZERO) > 0) {
+													System.out.println("Adding 2 * " + numSolutions + " = " + numSolutions.multiply(TWO) + " for length = " + length + " and width " + width);
+												}
+												ret = ret.add(numSolutions.multiply(TWO));								
+											}
+										}
+										
 									}
+									continue;
 								
 								} else if(newTop == CELL_MUST_BE_OCCUPIED) {
 									continue;
@@ -331,7 +364,8 @@ public class Main {
 									
 								} else  {
 									//Also cancel associated 4
-									int numNestedTwos = 0;
+									// numNestedTwos starts at -1 in this case:
+									int numNestedTwos = -1;
 									
 									for(int j=i-1; j>=0; j--) {
 
@@ -421,6 +455,7 @@ public class Main {
 				    //System.out.println("New width");
 				} //End adding wedges
 
+				
 				int NUM_TO_REMOVE = 4;
 
 				for(int i=0; i<NUM_TO_REMOVE; i++) {
@@ -432,23 +467,14 @@ public class Main {
 					
 					if(prevConfigs.containsKey(signatureToRemove)) {
 						
-						if(length > width && upperTouched && lowerTouched) {
-							BigInteger numSolutions = new BigInteger("" + prevConfigs.get(signatureToRemove).numAnimals[numSquares]);
-							
-							if(length == width + 1) {
-								if(numSolutions.compareTo(BigInteger.ZERO) > 0) {
-									System.out.println("Adding " + numSolutions + " for length = " + length + " and width " + width + "(Deduplicate)");
-								}
-								ret = ret.add(numSolutions);
-							} else {
-								if(numSolutions.compareTo(BigInteger.ZERO) > 0) {
-									System.out.println("Adding 2 * " + numSolutions + " = " + numSolutions.multiply(TWO) + " for length = " + length + " and width " + width);
-								}
-								ret = ret.add(numSolutions.multiply(TWO));								
-							}
-						}
 						
+						System.out.println("REMOVING all 0s");
 						prevConfigs.remove(signatureToRemove);
+						
+						if(upperTouched || lowerTouched || length > 1) {
+							System.out.println("ERROR: didn't expect to find empty boundary here!");
+							System.exit(1);
+						}
 					}
 					
 					
