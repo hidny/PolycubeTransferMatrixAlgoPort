@@ -30,7 +30,7 @@ public class MainVersion3 {
 		
 		initLowerTwoDissapeared();
 		
-		solve(30);
+		solve(31);
 		
 		//testArray();
 		//System.out.println("Num hashes removed: " + debugTooBig);
@@ -589,6 +589,17 @@ Final number for N = 30: 18946775782611174 (took 10 minutes)
 				ret++;
 			}
 		}
+		
+		//TODO: refine this:
+		int numFound=0;
+		for(int i=0; i<boundary.length; i++) {
+			if(boundary[i] == 2 ||  boundary[i] == 1) {
+				numFound++;
+			}
+		}
+		
+		ret += Math.max(0, numFound - 1);
+		//END TODO
 		
 		return ret;
 	}
