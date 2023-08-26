@@ -30,9 +30,9 @@ public class MainVersion3 {
 		
 		initLowerTwoDissapeared();
 		
-		//solve(29);
+		solve(30);
 		
-		testArray();
+		//testArray();
 		//System.out.println("Num hashes removed: " + debugTooBig);
 	}
 	
@@ -81,7 +81,9 @@ public class MainVersion3 {
 25: 20457802016011
 26: 79992676367108
 27: 313224032098244
-Final number for N = 28: 1228088671826973
+Final number for N = 28:  1228088671826973
+Final number for N = 29:  4820975409710116
+Final number for N = 30: 18946775782611174 (took 10 minutes)
 	 */
 
 	//Really inefficient storage method...
@@ -433,7 +435,7 @@ Final number for N = 28: 1228088671826973
 									
 									PartialGen2 tmp = PartialGen2.hardCopyAdd1SquareThough(prevPartialGen);
 									
-									if(tmp.nCur + minLengthToGo > numSquares) {
+									if(tmp.nCur + minLengthToGo + getNumToAddToCompleteBasedOnSignature(newSignature, width, minLengthToGo) > numSquares) {
 										//debugTooBig++;
 										//Too big.
 									} else {
@@ -557,6 +559,39 @@ Final number for N = 28: 1228088671826973
 	}
 	
 
+	//probably not the way to do this...
+	public static int getNumToAddToCompleteBasedOnSignature(long signature, int width, int minLengthToGo) {
+
+		boolean origUpperBorderTouched = ((signature % 4) /2) == 1;
+		boolean origLowerBorderTouched = (signature % 2) == 1;
+		
+		int boundary[] = getBoundaryLineFromSignature(signature, width);
+		
+		int ret = 0;
+		
+		if( ! origUpperBorderTouched) {
+			
+			//Need a sideways move... but that's already covered by the width = length constraint
+			//So only count it if minLengthToGo == 0
+			if(minLengthToGo == 0) {
+				ret++;
+			}
+			//Nevermind it!
+			
+			for(int i=0; i<boundary.length && boundary[i] == 0; i++) {
+				ret++;
+			}
+		}
+		
+		if( ! origLowerBorderTouched) {
+			
+			for(int i=boundary.length - 1; i>=0 && boundary[i] == 0; i--) {
+				ret++;
+			}
+		}
+		
+		return ret;
+	}
 	
 	public static int[] createIntialBoundaryLine(int width) {
 
