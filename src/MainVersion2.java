@@ -29,14 +29,14 @@ public class MainVersion2 {
 		
 		initLowerTwoDissapeared();
 		
-		//solve(10);
+		//solve(29);
 		
 		testArray();
 	}
 	
 	public static void testArray() {
 		
-		int MAX = 17;
+		int MAX = 23;
 		
 		BigInteger output[] = new BigInteger[MAX + 1];
 		for(int i=0; i<MAX + 1; i++) {
@@ -79,6 +79,7 @@ public class MainVersion2 {
 25: 20457802016011
 26: 79992676367108
 27: 313224032098244
+Final number for N = 28: 1228088671826973
 	 */
 
 	//Really inefficient storage method...
