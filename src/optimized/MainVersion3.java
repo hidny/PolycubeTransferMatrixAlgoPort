@@ -81,10 +81,14 @@ public class MainVersion3 {
 25: 20457802016011
 26: 79992676367108
 27: 313224032098244
-Final number for N = 28:  1228088671826973
-Final number for N = 29:  4820975409710116
-Final number for N = 30: 18946775782611174 (took 10 minutes)
-Final number for N = 31: 74541651404935148 (took almost 20 minutes)
+Final number for N = 28:    1228088671826973
+Final number for N = 29:    4820975409710116
+Final number for N = 30:   18946775782611174 (took 10 minutes)
+Final number for N = 31:   74541651404935148 (took almost 20 minutes)
+Final number for N = 32:  293560133910477776 (took about 15 minutes)
+Final number for N = 33: 1157186142148293638 (took about 30 minutes)
+Final number for N = 34: 4565553929115769162 (took about 1 hour and 30 minutes) **
+
 	 */
 
 	//Really inefficient storage method...
@@ -599,6 +603,7 @@ Final number for N = 31: 74541651404935148 (took almost 20 minutes)
 			}
 		}
 		
+		//TODO2: verify if -1 is needed by checking if the next kink is has merge potential
 		ret += Math.max(0, 2*(numFound - 1) - 1);
 		//END TODO
 		
