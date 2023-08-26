@@ -1,9 +1,10 @@
+package optimized;
 import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-public class MainVersion2 {
+public class MainVersion3 {
 
 	//goal:
 	// Implement the algo described in https://arxiv.org/pdf/cond-mat/0007239.pdf
@@ -32,6 +33,7 @@ public class MainVersion2 {
 		//solve(29);
 		
 		testArray();
+		//System.out.println("Num hashes removed: " + debugTooBig);
 	}
 	
 	public static void testArray() {
@@ -83,8 +85,8 @@ Final number for N = 28: 1228088671826973
 	 */
 
 	//Really inefficient storage method...
-	public static HashMap<Long, PartialGen> prevConfigs;
-	public static HashMap<Long, PartialGen> curConfigs;
+	public static HashMap<Long, PartialGen2> prevConfigs;
+	public static HashMap<Long, PartialGen2> curConfigs;
 	
 
 	public static final int NEW_LEFT_EMPTY_SQUARE_INDEX = 0;
@@ -97,6 +99,7 @@ Final number for N = 28: 1228088671826973
 	
 	public static final int BOOL_OPTIONS_COUNT = 2;
 	
+	//public static int debugTooBig = 0;
 	
 	//Matrix is just a copy of what's in the paper
 	public static int transitionMatrix[][][] =
@@ -172,31 +175,34 @@ Final number for N = 28: 1228088671826973
 		
 		for(int width=1; width<=maxWidth; width++) {
 			
-			PartialGen curPartial = new PartialGen(2 * numSquares);
+			PartialGen2 curPartial = new PartialGen2(2 * numSquares);
 			curPartial.numAnimals[0] = 1L;
 			
 			long seed = getSignature(createIntialBoundaryLine(width), INIT_UPPER_BORDER_UNTOUCHED, INIT_LOWER_BORDER_UNTOUCHED);
 			
-			prevConfigs = new HashMap<Long, PartialGen>();
-			prevConfigs.put(seed, PartialGen.hardCopy(curPartial));
+			prevConfigs = new HashMap<Long, PartialGen2>();
+			prevConfigs.put(seed, PartialGen2.hardCopy(curPartial));
+			
 			
 			
 			//TODO: I added +5 at the end just in case...
 			for(int length=1; length <= numSquares - width + 1 + 5; length++) {
 				
+				int minLengthToGo = Math.max(0, width - length);
+				
 				for(int i=0; i<width; i++) {
 					
 
-					curConfigs = new HashMap<Long, PartialGen>();
+					curConfigs = new HashMap<Long, PartialGen2>();
 					
 					// Took from: https://sentry.io/answers/iterate-hashmap-java/
-					Iterator<Map.Entry<Long, PartialGen>> iterator = prevConfigs.entrySet().iterator();					
+					Iterator<Map.Entry<Long, PartialGen2>> iterator = prevConfigs.entrySet().iterator();					
 					
 				    while (iterator.hasNext()) {
 				    	
-				    	Map.Entry<Long, PartialGen> entry = iterator.next();
+				    	Map.Entry<Long, PartialGen2> entry = iterator.next();
 
-						PartialGen prevPartialGen = prevConfigs.get(entry.getKey());
+						PartialGen2 prevPartialGen = prevConfigs.get(entry.getKey());
 						
 						long curSignature = entry.getKey();
 						
@@ -279,8 +285,6 @@ Final number for N = 28: 1228088671826973
 								
 							} else if(lowerTwoDissapeared[origBottom][origTop][fillSquare]) {
 
-								//System.exit(1);
-								//boundaryLine
 								int numNestedTwos = 0;
 								
 								for(int j=i-1; j>=0; j--) {
@@ -308,8 +312,6 @@ Final number for N = 28: 1228088671826973
 								
 							} else if(lowerFourDissapeared[origBottom][origTop][fillSquare]) {
 								
-								//System.exit(1);
-								//boundaryLine
 								int numNestedFours = 0;
 								
 								for(int j=i+1; j<width; j++) {
@@ -337,7 +339,6 @@ Final number for N = 28: 1228088671826973
 								
 							} else if(mergingTwoSeparteSections[origBottom][origTop][fillSquare]) {
 
-								//System.exit(1);
 								if(origBottom == 4) {
 
 									//Also cancel associated 2
@@ -391,8 +392,6 @@ Final number for N = 28: 1228088671826973
 										}
 									}
 								}
-							} else {
-								
 							}
 							
 							
@@ -418,19 +417,30 @@ Final number for N = 28: 1228088671826973
 						
 							if(fillSquare == 0) {
 								if(curConfigs.containsKey(newSignature)) {
-									curConfigs.put(newSignature, PartialGen.hardCopyMerge(curConfigs.get(newSignature), prevPartialGen));
+									curConfigs.put(newSignature, PartialGen2.hardCopyMerge(curConfigs.get(newSignature), prevPartialGen));
 								} else {
-									curConfigs.put(newSignature, PartialGen.hardCopy(prevPartialGen));
+									curConfigs.put(newSignature, PartialGen2.hardCopy(prevPartialGen));
 								}
 							} else {
-								//TODO: "with an addition weight factor u on the source if the new site is occupied"
-								// TOOD: why not just say weight factor of 1?? Update: I still don't know, but I got away with assuming u=1.
+								//"with an addition weight factor u on the source if the new site is occupied"
+								// Why not just say weight factor of 1?? Update: I still don't know, but I got away with assuming u=1.
 								if(curConfigs.containsKey(newSignature)) {
-									//: adds 1
-									curConfigs.put(newSignature, PartialGen.hardCopyMerge(curConfigs.get(newSignature), PartialGen.hardCopyAdd1SquareThough(prevPartialGen)));
-								} else {
 									// adds 1
-									curConfigs.put(newSignature, PartialGen.hardCopyAdd1SquareThough(prevPartialGen));
+									
+									curConfigs.put(newSignature, PartialGen2.hardCopyMerge(curConfigs.get(newSignature), PartialGen2.hardCopyAdd1SquareThough(prevPartialGen)));
+									
+								} else {
+									
+									PartialGen2 tmp = PartialGen2.hardCopyAdd1SquareThough(prevPartialGen);
+									
+									if(tmp.nCur + minLengthToGo > numSquares) {
+										//debugTooBig++;
+										//Too big.
+									} else {
+
+										curConfigs.put(newSignature, tmp);
+									}
+									// adds 1
 								}
 							}
 							
@@ -446,7 +456,8 @@ Final number for N = 28: 1228088671826973
 					}
 				    
 				    
-				    
+
+					//System.out.println(curConfigs.size());
 				    prevConfigs = curConfigs;
 
 				} //End adding wedges
