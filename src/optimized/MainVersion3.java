@@ -30,9 +30,9 @@ public class MainVersion3 {
 		
 		initLowerTwoDissapeared();
 		
-		solve(31);
+		//solve(35);
 		
-		//testArray();
+		testArray();
 		//System.out.println("Num hashes removed: " + debugTooBig);
 	}
 	
@@ -84,6 +84,7 @@ public class MainVersion3 {
 Final number for N = 28:  1228088671826973
 Final number for N = 29:  4820975409710116
 Final number for N = 30: 18946775782611174 (took 10 minutes)
+Final number for N = 31: 74541651404935148 (took almost 20 minutes)
 	 */
 
 	//Really inefficient storage method...
@@ -590,7 +591,7 @@ Final number for N = 30: 18946775782611174 (took 10 minutes)
 			}
 		}
 		
-		//TODO: refine this:
+		//TODO: refine this by looping through the signature:
 		int numFound=0;
 		for(int i=0; i<boundary.length; i++) {
 			if(boundary[i] == 2 ||  boundary[i] == 1) {
@@ -598,7 +599,7 @@ Final number for N = 30: 18946775782611174 (took 10 minutes)
 			}
 		}
 		
-		ret += Math.max(0, numFound - 1);
+		ret += Math.max(0, 2*(numFound - 1) - 1);
 		//END TODO
 		
 		return ret;
