@@ -609,8 +609,7 @@ Final number for N = 34: 4565553929115769162 (took about 1 hour and 30 minutes) 
 		//END TODO
 		*/
 		
-		ret += getMinDistanceSpanningTree(boundary);
-		//ret += getMinDistSemiIgnore1sBAD(boundary);
+		ret += getMinDistanceBonus1s(boundary);
 		
 		return ret;
 	}
@@ -628,7 +627,7 @@ Final number for N = 34: 4565553929115769162 (took about 1 hour and 30 minutes) 
 		
 	}
 	
-	public static int getMinDistanceSpanningTree(int boundary[]) {
+	public static int getMinDistanceBonus1s(int boundary[]) {
 		
 		int numFound=0;
 		for(int i=0; i<boundary.length; i++) {
@@ -681,77 +680,7 @@ Final number for N = 34: 4565553929115769162 (took about 1 hour and 30 minutes) 
 		
 	}
 	
-	public static int getMinDistSemiIgnore1sBAD(int boundary[]) {
-		
-		int ret = -1;
-		
-		for(int i=0; i<boundary.length; i++) {
-			if(boundary[i] == 1) {
-				ret += 2;
-			}
-		}
-		
-		int curTop=0;
-		
-		int curBottom=0;
-		
-		for(int i=0; i<boundary.length; i++) {
-			
-			if(boundary[i] == 4) {
-				curTop=i;
-			}
-		}
-		for(int j=boundary.length - 1; j>curTop; j--) {
-			if(boundary[j] == 2) {
-				curBottom=j;
-			}
-		}
-		
-		
-		
-		while(curTop < curBottom) {
-			
-			int distTop = 1;
-
-			for(int i=curTop+1; i<curBottom; i++) {
-				
-				if(boundary[i] == 4) {
-					distTop  = i - curTop;
-
-				} else if(boundary[i] == 2) {
-					curTop = i;
-				}
-			}
-			
-			curTop += distTop;
-			
-			int distBottom = 1;
-			
-			for(int j=curBottom-1; j>curTop; j--) {
-				if(boundary[j] == 2) {
-					distBottom  = curBottom - j;
-
-				} else if(boundary[j] == 4) {
-					curBottom = j;
-				}
-			}
-			
-			curBottom -= distBottom;
-			
-			ret += Math.max(distTop, distBottom);
-			//ret += Math.max(Math.max(distTop, distBottom), 2);
-		}
-		
-		ret = Math.max(ret, 0);
-		int oldRet = getBasicNumReqTouching(boundary);
-		
-		/*if(ret < oldRet) {
-			System.out.println("OOPS! It turns out that I didn't refine it at all!");
-			System.exit(1);
-		}*/
-		
-		return ret;
-	}
+	
 	
 	public static int[] createIntialBoundaryLine(int width) {
 
