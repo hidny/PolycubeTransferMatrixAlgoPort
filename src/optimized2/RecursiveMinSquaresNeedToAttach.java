@@ -5,7 +5,12 @@ public class RecursiveMinSquaresNeedToAttach {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 
-		
+		standardTests();
+		specificTests();
+	}
+	
+	
+	public static void standardTests() {
 		//Top-level function tests:
 		System.out.println("Top level function test:");
 		//Expect: 0
@@ -206,10 +211,26 @@ public class RecursiveMinSquaresNeedToAttach {
 			System.out.println("Test testBetween3s failed! " + getMinDistRecursive(testBetween3s));
 		}
 		
+		int testTricky1[]  = new int[] {0, 4, 0, 3,3,3,3,3,4,3,3,3,0,0,0,2,2,0,0};
+		if(getMinDistRecursive(testTricky1) != 1) {
+			System.out.println("Test testTricky1 failed! " + getMinDistRecursive(testTricky1));
+		}
+		
 		
 		System.out.println("Done test");
+		System.out.println();
 	}
 
+	//TODO: make tests specific to the code you're writing:
+	public static void specificTests() {
+		
+		System.out.println("Hello specific test");
+		
+		int testBefween3[]  = new int[] {0, 4, 0, 3, 0, 0, 1, 3, 0, 0, 3, 2, 0};
+		if(getMinDistRecursive(testBefween3) != 1) {
+			System.out.println("Test testBefween3 failed! " + getMinDistRecursive(testBefween3));
+		}
+	}
 	
 	public static final int RET_INDEX = 0;
 	public static final int TOP_USED_INDEX = 1;
@@ -361,7 +382,7 @@ public class RecursiveMinSquaresNeedToAttach {
 		int numSectionsToAttachTo = getNumSectionssToAttachTo(boundary, index4or3, index3or2);
 		
 		if(numSectionsToAttachTo == 0) {
-			System.out.println("ERROR: called getNumBetween33 even thougj there's nothing to attach to");
+			System.out.println("ERROR: called getNumBetween33 even though there's nothing to attach to");
 			System.exit(1);
 			return new int[] {0, 0, 0};
 			
