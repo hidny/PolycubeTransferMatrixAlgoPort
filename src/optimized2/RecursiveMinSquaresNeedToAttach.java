@@ -6,6 +6,8 @@ public class RecursiveMinSquaresNeedToAttach {
 		// TODO Auto-generated method stub
 
 		
+		//Top-level function tests:
+		System.out.println("Top level function test:");
 		//Expect: 0
 		int oneOne[] = new int[] {0,0,0,0,0,1,0};
 		
@@ -74,9 +76,138 @@ public class RecursiveMinSquaresNeedToAttach {
 			System.out.println("Test teststart42Complicated failed! " + getMinDistRecursive(teststart42Complicated));
 		}
 
+		//Recursive tests:
 
-		System.out.println("Done test");
+		System.out.println("Basic Recursion tests:");
 		
+		int teststart42FromBottomBasic[] = new int[] {4,0,0,0,0,1,0,2, 0, 0, 0, 0, 0, 0};
+		
+		if(getMinDistRecursive(teststart42FromBottomBasic) != 2) {
+			System.out.println("Test teststart42FromBottomBasic failed! " + getMinDistRecursive(teststart42FromBottomBasic));
+		}
+
+		int teststart42FromTopBasic[] = new int[] {4,0,0,1,0,0,0,0,2, 0, 0, 0, 0, 0, 0};
+		
+		if(getMinDistRecursive(teststart42FromTopBasic) != 3) {
+			System.out.println("Test teststart42FromTopBasic failed! " + getMinDistRecursive(teststart42FromTopBasic));
+		}
+		
+		
+		int teststart42FromBottomBasic2[] = new int[] {4,0,0,0,4,2,0,2, 0, 0, 0, 0, 0, 0};
+		
+		if(getMinDistRecursive(teststart42FromBottomBasic2) != 2) {
+			System.out.println("Test teststart42FromBottomBasic2 failed! " + getMinDistRecursive(teststart42FromBottomBasic2));
+		}
+
+		int teststart42FromTopBasic2[] = new int[] {4,0,0,4,2,0,0,0,2, 0, 0, 0, 0, 0, 0};
+		
+		if(getMinDistRecursive(teststart42FromTopBasic2) != 3) {
+			System.out.println("Test teststart42FromTopBasic2 failed! " + getMinDistRecursive(teststart42FromTopBasic2));
+		}
+		//TODO: test with the 3s...
+		
+		int teststart432FromBottomBasic[] = new int[] {4,0,0,0,0,1,0,0, 3, 0, 0, 0, 0, 2};
+		
+		if(getMinDistRecursive(teststart432FromBottomBasic) != 3) {
+			System.out.println("Test teststart42FromBottomBasic failed! " + getMinDistRecursive(teststart432FromBottomBasic));
+		}
+		
+		int teststart432FromTopBasic[] = new int[] {4,0,0,0,0,0,0,0, 3, 1, 0, 0, 0, 2};
+		
+		if(getMinDistRecursive(teststart432FromTopBasic) != 1) {
+			System.out.println("Test teststart432FromTopBasic failed! " + getMinDistRecursive(teststart432FromTopBasic));
+		}
+		
+		//Double recursion test:
+		System.out.println();
+		System.out.println("Double Recursion tests:");
+		
+		int testDoubleRecursionBasic[] = new int[] {4,0,0,0,0,4,0,1, 0, 0, 0, 0, 2, 2};
+		
+		if(getMinDistRecursive(testDoubleRecursionBasic) != 4) {
+			System.out.println("Test testDoubleRecursionBasic failed! " + getMinDistRecursive(testDoubleRecursionBasic));
+		}
+
+
+		int testDoubleDoubleRecursionBasic[] = new int[] {4,4,2,0,0,4,0,0, 0,0,0, 1, 0, 0, 0, 2, 0, 2};
+		
+		if(getMinDistRecursive(testDoubleDoubleRecursionBasic) != 8) {
+			System.out.println("Test testDoubleDoubleRecursionBasic failed! " + getMinDistRecursive(testDoubleDoubleRecursionBasic));
+		}
+		
+		int testDoubleDoubleRecursionBasic2[] = new int[] {4,0,0,4,2,0,0,4,0,0, 0,0,0, 1, 0, 0, 0, 2, 0, 2};
+		
+		if(getMinDistRecursive(testDoubleDoubleRecursionBasic2) != 10) {
+			System.out.println("Test testDoubleDoubleRecursionBasic2 failed! " + getMinDistRecursive(testDoubleDoubleRecursionBasic));
+		}
+		
+		int testRecursionStraightThruFromBottom[] = new int[] {4,0,0,0,4,2,0,0,4,3,3, 0,0,2, 0, 4, 3, 3, 2, 0, 2};
+		
+		if(getMinDistRecursive(testRecursionStraightThruFromBottom) != 9) {
+			System.out.println("Test testRecursionStraightThruFromBottom failed! " + getMinDistRecursive(testRecursionStraightThruFromBottom));
+		}
+		
+		int testRecursionStraightThruFromBottomAmbiguous[] = new int[] {4,0,0,4,2,0,0,4,3,3, 0,0,2, 0, 4, 3, 3, 2, 0, 2};
+
+		if(getMinDistRecursive(testRecursionStraightThruFromBottomAmbiguous) != 9) {
+			System.out.println("Test testRecursionStraightThruFromBottomAmbiguous failed! " + getMinDistRecursive(testRecursionStraightThruFromBottomAmbiguous));
+		}
+
+		System.out.println();
+		System.out.println("Test random complicated:");
+		
+		int testRandomComplicated[] = new int[] {4,0,1, 0 ,4,2,0,0,4,3,3, 0,0,2, 0, 4, 3, 3, 2, 0, 0, 0, 2};
+
+		if(getMinDistRecursive(testRandomComplicated) != 11) {
+			System.out.println("Test testRandomComplicated failed! " + getMinDistRecursive(testRandomComplicated));
+		}
+		
+		int testRandomComplicated2[] = new int[] {4,0,1, 0 ,4,2,0,0,4,3,3, 0,0,2, 0, 4, 3, 3, 2, 0, 0, 0, 2, 0, 0, 4, 0, 0, 2};
+
+		if(getMinDistRecursive(testRandomComplicated2) != 15) {
+			System.out.println("Test testRandomComplicated2 failed! " + getMinDistRecursive(testRandomComplicated2));
+		}
+		
+		int testRandomComplicated3[] = new int[] {4,0,1, 0 ,4,2,0,0,4,3,3, 0,0,2, 0, 4, 3, 3, 2, 0, 0, 0, 2, 0, 0, 4, 0, 0, 0, 1, 0, 2};
+
+		if(getMinDistRecursive(testRandomComplicated3) != 18) {
+			System.out.println("Test testRandomComplicated3 failed! " + getMinDistRecursive(testRandomComplicated3));
+		}
+		
+		System.out.println();
+		System.out.println("Test semi-functional:");
+		
+		int testSemiFunctional1[] = new int[] {4,0,1,0,0,2,0,0, 0, 1};
+		
+		if(getMinDistRecursive(testSemiFunctional1) != 7) {
+			System.out.println("Test testSemiFunctional1 failed! " + getMinDistRecursive(testSemiFunctional1));
+		}
+		
+
+		int testSemiFunctional2[] = new int[] {0, 1, 0, 4,0,1,0,0,2,0,0, 0, 0};
+		
+		if(getMinDistRecursive(testSemiFunctional2) != 4) {
+			System.out.println("Test testSemiFunctional2 failed! " + getMinDistRecursive(testSemiFunctional2));
+		}
+		
+		int testBetween3s[]  = new int[] {0, 4, 0, 3,0,1,3,3,0,3,0, 2, 0};
+		if(getMinDistRecursive(testBetween3s) != 1) {
+			System.out.println("Test testBetween3s failed! " + getMinDistRecursive(testBetween3s));
+		}
+		
+
+		int testBetween3s2[]  = new int[] {0, 4, 0, 3,0,1,3,3,0,3,0,0,4,2,0,0,0,0,3, 2, 0};
+		if(getMinDistRecursive(testBetween3s2) != 5) {
+			System.out.println("Test testBetween3s2 failed! " + getMinDistRecursive(testBetween3s2));
+		}
+		
+		int testBetween3s3[]  = new int[] {0, 4, 0, 3,0,1,3,3,0,3,0,0,0,0,0,4,2,0,0,3, 2, 0};
+		if(getMinDistRecursive(testBetween3s) != 5) {
+			System.out.println("Test testBetween3s failed! " + getMinDistRecursive(testBetween3s));
+		}
+		
+		
+		System.out.println("Done test");
 	}
 
 	
@@ -98,6 +229,8 @@ public class RecursiveMinSquaresNeedToAttach {
 		int curIndex = 0;
 		do {
 			
+			boolean goFromBottom = false;
+			
 			for(; curIndex<boundary.length; curIndex++) {
 				if(boundary[curIndex] == 4 ||  boundary[curIndex] == 1) {
 					
@@ -110,12 +243,18 @@ public class RecursiveMinSquaresNeedToAttach {
 					firstIndex = curIndex;
 				}
 				
+				
 				if(prevIndex != -1) {
+					
 					ret += curIndex - prevIndex + 1;
+				} else {
+					goFromBottom = true;
+					
 				}
 				
 				prevIndex = curIndex;
 				
+				//TODO: if it's the first 4, handle that case!
 				if(boundary[firstIndex] == 4) {
 
 					
@@ -137,7 +276,7 @@ public class RecursiveMinSquaresNeedToAttach {
 					
 					int index2 = curIndex;
 					
-					int tmp[] = getMinDistRecursiveBetween4and2(boundary, true, index4, index2);
+					int tmp[] = getMinDistRecursiveBetween4and2(boundary, ! goFromBottom, index4, index2);
 					
 					ret+=tmp[RET_INDEX];
 					//Check for bottom bonus:
