@@ -84,7 +84,7 @@ public class RecursiveMinSquaresNeedToAttach {
 		}
 
 		//Recursive tests:
-
+		System.out.println();
 		System.out.println("Basic Recursion tests:");
 		
 		int teststart42FromBottomBasic[] = new int[] {4,0,0,0,0,1,0,2, 0, 0, 0, 0, 0, 0};
@@ -136,13 +136,13 @@ public class RecursiveMinSquaresNeedToAttach {
 		}
 
 
-		int testDoubleDoubleRecursionBasic[] = new int[] {4,4,2,0,0,4,0,0, 0,0,0, 1, 0, 0, 0, 2, 0, 2};
+		int testDoubleDoubleRecursionBasic[] = new int[]  {4, 4, 2, 0, 0, 4, 0, 0, 0, 0, 0, 1, 0, 0, 0, 2, 0, 2};
 		
 		if(getMinDistRecursive(testDoubleDoubleRecursionBasic) != 8) {
 			System.out.println("Test testDoubleDoubleRecursionBasic failed! " + getMinDistRecursive(testDoubleDoubleRecursionBasic));
 		}
 		
-		int testDoubleDoubleRecursionBasic2[] = new int[] {4,0,0,4,2,0,0,4,0,0, 0,0,0, 1, 0, 0, 0, 2, 0, 2};
+		int testDoubleDoubleRecursionBasic2[] = new int[] {4, 0, 0, 4, 2, 0, 0, 4, 0, 0, 0, 0, 0, 1, 0, 0, 0, 2, 0, 2};
 		
 		if(getMinDistRecursive(testDoubleDoubleRecursionBasic2) != 10) {
 			System.out.println("Test testDoubleDoubleRecursionBasic2 failed! " + getMinDistRecursive(testDoubleDoubleRecursionBasic));
@@ -209,8 +209,8 @@ public class RecursiveMinSquaresNeedToAttach {
 		}
 		
 		int testBetween3s3[]  = new int[] {0, 4, 0, 3,0,1,3,3,0,3,0,0,0,0,0,4,2,0,0,3, 2, 0};
-		if(getMinDistRecursive(testBetween3s) != 5) {
-			System.out.println("Test testBetween3s failed! " + getMinDistRecursive(testBetween3s));
+		if(getMinDistRecursive(testBetween3s3) != 5) {
+			System.out.println("Test testBetween3s failed! " + getMinDistRecursive(testBetween3s3));
 		}
 		
 		int testTricky1[]  = new int[] {0, 4, 0, 3,3,3,3,3,4,3,3,3,0,0,0,2,2,0,0};
@@ -236,15 +236,15 @@ public class RecursiveMinSquaresNeedToAttach {
 	public static void specificTests2() {
 		
 		System.out.println("Hello specific test 2");
+		int testSemiFunctional2[] = new int[] {0, 1, 0, 4,0,1,0,0,2,0,0, 0, 0};
 		
-		int testBetween3s3[]  = new int[] {0, 4, 0, 3,0,1,3,3,0,3,0,0,0,0,0,4,2,0,0,3, 2, 0};
-		if(getMinDistRecursive(testBetween3s3) != 5) {
-			System.out.println("Test testBetween3s failed! " + getMinDistRecursive(testBetween3s3));
+		if(getMinDistRecursive(testSemiFunctional2) != 4) {
+			System.out.println("Test testSemiFunctional2 failed! " + getMinDistRecursive(testSemiFunctional2));
 		}
 	}
 
 	public static final int RET_INDEX = 0;
-	public static final int TOP_USED_INDEX = 1;
+	public static final int TOP_INDEX_USED = 1;
 	public static final int BOTTOM_INDEX_USED = 2;
 	
 
@@ -291,7 +291,6 @@ public class RecursiveMinSquaresNeedToAttach {
 					
 					//System.out.println("TEST: " + getIndex2Equiv(boundary, index4));
 					
-					//
 					int tmp[] = getMinDistRecursiveBetween4and2(boundary, TOP_LEVEL_COMING_FROM_TOP_TO_BOTTOM, index4, getIndex2Equiv(boundary, index4));
 					
 					ret+=tmp[RET_INDEX];
@@ -319,6 +318,7 @@ public class RecursiveMinSquaresNeedToAttach {
 		} while(curIndex < boundary.length);
 		
 		
+		System.out.println("------");
 		
 		
 		return Math.max(0,  ret);
@@ -327,9 +327,10 @@ public class RecursiveMinSquaresNeedToAttach {
 	
 	private static int[] getMinDistRecursiveBetween4and2(int boundary[], boolean comingFromTop, int index4, int index2) {
 		
+		//System.out.println("getMinDistRecursiveBetween4and2 " + comingFromTop + ", " + index4 + ", " + index2);
 		int ret[] = new int[3];
 	
-		
+		boolean USE_TOP_INDEX_GIVEN_CHOICE = true;
 		
 		if(comingFromTop) {
 			int prevIndex = index4;
@@ -339,7 +340,7 @@ public class RecursiveMinSquaresNeedToAttach {
 			
 			boolean curComingFromTop = true;
 			
-			for(int i=index4 + 1; i<index2; i++ ) {
+			for(int i=index4 + 1; i<=index2; i++ ) {
 				//System.out.println("cur: " + ret[RET_INDEX]);
 			
 				if(curNumLevelsDeep == 0) {
@@ -356,7 +357,8 @@ public class RecursiveMinSquaresNeedToAttach {
 						if(foundInBetween) {
 							
 							//System.out.println("In recur");
-							int tmp[] = getNumBetween33(boundary, curComingFromTop, false, prevIndex, i);
+							//TODO: ! USE_TOP_INDEX_GIVEN_CHOICE when coming from bottom.
+							int tmp[] = getNumBetween33(boundary, curComingFromTop, false, prevIndex, i, ! USE_TOP_INDEX_GIVEN_CHOICE);
 
 							//System.out.println("Out recur");
 							curComingFromTop = tmp[BOTTOM_INDEX_USED] == 1;
@@ -385,14 +387,68 @@ public class RecursiveMinSquaresNeedToAttach {
 		} else if( ! comingFromTop) {
 			
 			//TODO: mirror above, but do it from the bottom.
+			int prevIndex = index2;
+			boolean foundInBetween = false;
+			
+			int curNumLevelsDeep = 0;
+			
+			boolean curComingFromBottom = false;
+			
+			for(int i=index2 - 1; i>=index4; i-- ) {
+				//System.out.println("cur: " + ret[RET_INDEX]);
+			
+				if(curNumLevelsDeep == 0) {
+					if(boundary[i] == 2) {
+
+						foundInBetween = true;
+						curNumLevelsDeep++;
+						
+					} else if(boundary[i] == 1) {
+						foundInBetween = true;
+					
+					} else if(boundary[i] == 3 || boundary[i] == 4) {
+						
+						if(foundInBetween) {
+							
+							//System.out.println("In recur");
+							//TODO: ! USE_TOP_INDEX_GIVEN_CHOICE when coming from bottom.
+							int tmp[] = getNumBetween33(boundary, false, curComingFromBottom, i, prevIndex, USE_TOP_INDEX_GIVEN_CHOICE);
+
+							//System.out.println("Out recur");
+							curComingFromBottom = tmp[TOP_INDEX_USED] == 1;
+							ret[RET_INDEX] += tmp[0];
+							//System.out.println("tmp[0]: " + tmp[0]);
+							//System.out.println("More: " + ret[RET_INDEX]);
+							
+						} else {
+
+							curComingFromBottom = false;
+						}
+						prevIndex= i;
+						foundInBetween = false;
+					}
+				} else {
+					if(boundary[i] == 2) {
+						curNumLevelsDeep++;
+
+					} else if(boundary[i] == 4) {
+						curNumLevelsDeep--;
+					}
+				}
+				
+			}
 		}
 
+		//System.out.println("END getMinDistRecursiveBetween4and2 " + comingFromTop + ", " + index4 + ", " + index2 + ": " + ret[0]);
+		//System.out.println();
 		//System.out.println("cur end: " + ret[RET_INDEX]);
 		return ret;
 	}
 	
 	
-	private static int[] getNumBetween33(int boundary[], boolean comingFromTop, boolean comingFromBottom, int index4or3, int index3or2) {
+	private static int[] getNumBetween33(int boundary[], boolean topIndexUsed, boolean bottomIndexUsed, int index4or3, int index3or2, boolean useTopIndexGivenChoice) {
+		
+		//System.out.println("getNumBetween33 " + topIndexUsed + ", " + index4or3 + ", " + index3or2);
 		
 		int numSectionsToAttachTo = getNumSectionsToAttachTo(boundary, index4or3, index3or2);
 		
@@ -403,6 +459,9 @@ public class RecursiveMinSquaresNeedToAttach {
 			
 		}
 		
+		if(index4or3 == 0 && index3or2==20) {
+			//System.out.println("Debug num Sections to attach to: " + numSectionsToAttachTo);
+		}
 		
 		//100000 is just a big number..
 		int ret = 1000000;
@@ -416,7 +475,7 @@ public class RecursiveMinSquaresNeedToAttach {
 			int prevStartIndexTop = index4or3;
 			int curIndexFromTop = index4or3 + 1;
 
-			boolean curPrevStartIndexUsed = comingFromTop;
+			boolean curPrevStartIndexUsed = topIndexUsed;
 			
 			for(int i=0; i<numAttachToTop; i++) {
 				
@@ -455,9 +514,14 @@ public class RecursiveMinSquaresNeedToAttach {
 						curPrevStartIndexUsed = true;
 					}
 					prevStartIndexTop = index2Equiv;
+					curIndexFromTop = index2Equiv;
 					
 				} else {
 					System.out.println("ERROR: something went terribly wrong... Unexpected boundary number 1");
+					for(int k=0; k<boundary.length; k++) {
+						System.out.print(boundary[k] + " ");
+					}
+					System.out.println("DEBUG3");
 					System.exit(1);
 				}
 				
@@ -467,7 +531,7 @@ public class RecursiveMinSquaresNeedToAttach {
 			
 			//Copy/pastish code, but from bottom
 
-			boolean curPrevStartIndexUsedFromBottom = comingFromBottom;
+			boolean curPrevStartIndexUsedFromBottom = bottomIndexUsed;
 			int prevStartIndexBottom = index3or2;
 			int curIndexFromBottom = index3or2 - 1;
 			
@@ -480,6 +544,7 @@ public class RecursiveMinSquaresNeedToAttach {
 					
 					if(curIndexFromBottom <= index4or3) {
 						System.out.println("ERROR: something went terribly wrong in bottom part of getNumBetween33...");
+						System.out.println("DEBUG 1");
 						System.exit(1);
 					}
 				}
@@ -510,9 +575,11 @@ public class RecursiveMinSquaresNeedToAttach {
 						curPrevStartIndexUsedFromBottom = true;
 					}
 					prevStartIndexBottom = index4Equiv;
+					curIndexFromBottom = index4Equiv;
 					
 				} else {
-					System.out.println("ERROR: something went terribly wrong... Unexpected boundary number 1");
+					System.out.println("ERROR: something went terribly wrong... Unexpected boundary number 2");
+					System.out.println("DEBUG 2");
 					System.exit(1);
 				}
 				
@@ -525,15 +592,21 @@ public class RecursiveMinSquaresNeedToAttach {
 			
 			//Update the minimum squares required:
 			if(curMinSquaresCount < ret) {
+				
+				/*if(index4or3 == 0 && index3or2==20) {
+					System.out.println();
+					System.out.println("DEBUG ret: " + curMinSquaresCount + " with " + numAttachToTop + " attached to top");
+					System.out.println();
+				}*/
 				ret = curMinSquaresCount;
 				
-				if(numAttachToTop > 0 || comingFromTop) {
+				if(numAttachToTop > 0 || topIndexUsed) {
 					retComingFromTop = 1;
 				} else {
 					retComingFromTop = 0;
 				}
 
-				if(numAttachToBottom > 0 || comingFromBottom) {
+				if(numAttachToBottom > 0 || bottomIndexUsed) {
 					retComingFromBottom = 1;
 				} else {
 					retComingFromBottom= 0;
@@ -543,16 +616,17 @@ public class RecursiveMinSquaresNeedToAttach {
 				//TODO: this is broken!
 				//TODO: What if we have the choice of going from top or from bottom.
 				//In that case, we should be guided to pick one.
-				
+				//TODO: use var: useTopIndexGivenChoice
+				//TODO: test before/after
 				
 				//Check if we could also attach to top/bottom with 0 cost:
-				if(numAttachToTop > 0 || comingFromTop || retComingFromTop == 1) {
+				if(numAttachToTop > 0 || topIndexUsed || retComingFromTop == 1) {
 					retComingFromTop = 1;
 				} else {
 					retComingFromTop = 0;
 				}
 
-				if(numAttachToBottom > 0 || comingFromBottom || retComingFromBottom == 1) {
+				if(numAttachToBottom > 0 || bottomIndexUsed || retComingFromBottom == 1) {
 					retComingFromBottom = 1;
 				} else {
 					retComingFromBottom= 0;
@@ -561,7 +635,8 @@ public class RecursiveMinSquaresNeedToAttach {
 			}
 			
 		}
-		
+
+		//System.out.println("END getNumBetween33 " + topIndexUsed + ", " + index4or3 + ", " + index3or2 + ": " + ret);
 		return new int[] {ret, retComingFromTop, retComingFromBottom};
 	}
 	
@@ -581,7 +656,7 @@ public class RecursiveMinSquaresNeedToAttach {
 				}
 				num4sNested++;
 
-			} else if(boundary[curIndex] == 2 || boundary[curIndex] == 3) {
+			} else if(boundary[curIndex] == 2) {
 				num4sNested--;
 				if(num4sNested == -1) {
 					break;
