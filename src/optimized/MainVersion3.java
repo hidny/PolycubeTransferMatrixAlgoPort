@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import optimized2.RecursiveMinSquaresNeedToAttach;
+
 public class MainVersion3 {
 
 	//goal:
@@ -30,15 +32,15 @@ public class MainVersion3 {
 		
 		initLowerTwoDissapeared();
 		
-		//solve(35);
+		solve(10);
 		
-		testArray();
+		//testArray();
 		//System.out.println("Num hashes removed: " + debugTooBig);
 	}
 	
 	public static void testArray() {
 		
-		int MAX = 34;
+		int MAX = 30;
 		
 		BigInteger output[] = new BigInteger[MAX + 1];
 		for(int i=0; i<MAX + 1; i++) {
@@ -91,6 +93,62 @@ Final number for N = 34: 4565553929115769162 (took about 1 hour and 30 minutes) 
 
 	 */
 
+	/*
+TODO:
+Partial check: 2
+Partial check: 844
+Partial check: 10300
+Partial check: 30402
+Partial check: 36446
+Final number for N = 10: 36446
+
+Add 466.
+Add 897.
+Add 869.
+Add 820.
+Add 1128.
+Add 278.
+Add 448.
+Add 308.
+Add 328.
+Add 502.
+Add 0.
+Add 0.
+Add 0.
+Add 0.
+Add 0.
+
+vs:
+
+Partial check: 2
+Partial check: 844
+Partial check: 10300
+Partial check: 30402
+Partial check: 36439
+Final number for N = 10: 36439
+
+Partial check: 2
+Partial check: 844
+Partial check: 10300
+Partial check: 30402
+Add 464. (2)
+Add 895. (2)
+Add 866. (3)
+
+Add 820.
+Add 1128.
+Add 278.
+Add 448.
+Add 308.
+Add 328.
+Add 502.
+Partial check: 36439
+Final number for N = 10: 36439
+
+FIND BUG WHEN WIDTH IS 5...
+Only off by 7
+
+	 */
 	//Really inefficient storage method...
 	public static HashMap<Long, PartialGen2> prevConfigs;
 	public static HashMap<Long, PartialGen2> curConfigs;
@@ -182,7 +240,7 @@ Final number for N = 34: 4565553929115769162 (took about 1 hour and 30 minutes) 
 		
 		for(int width=1; width<=maxWidth; width++) {
 			
-			PartialGen2 curPartial = new PartialGen2(2 * numSquares);
+			PartialGen2 curPartial = new PartialGen2(numSquares);
 			curPartial.numAnimals[0] = 1L;
 			
 			long seed = getSignature(createIntialBoundaryLine(width), INIT_UPPER_BORDER_UNTOUCHED, INIT_LOWER_BORDER_UNTOUCHED);
@@ -195,11 +253,47 @@ Final number for N = 34: 4565553929115769162 (took about 1 hour and 30 minutes) 
 			//TODO: I added +5 at the end just in case...
 			for(int length=1; length <= numSquares - width + 1 + 5; length++) {
 				
+				//System.out.println("CUR LENGTH: " + length);
+				
 				int minLengthToGo = Math.max(0, width - length);
 				
 				for(int i=0; i<width; i++) {
 					
+					if(width == 5) {
+						Iterator<Map.Entry<Long, PartialGen2>> iterator = prevConfigs.entrySet().iterator();					
+						
+					    while (iterator.hasNext()) {
+					    	Map.Entry<Long, PartialGen2> entry = iterator.next();
 
+							PartialGen2 prevPartialGen = prevConfigs.get(entry.getKey());
+							
+							/*System.out.println("Boundary line: ( i = " + (i) + ")");
+							int boundaryLine[] =  getBoundaryLineFromSignature(entry.getKey(), width);
+							for(int k=0; k<boundaryLine.length; k++) {
+								System.out.print(boundaryLine[k] + ",");
+							}
+							
+							
+							System.out.println();
+							for(int k=0; k<prevPartialGen.numAnimals.length; k++) {
+								System.out.print(prevPartialGen.numAnimals[k] + ",");
+							}
+							if(entry.getKey() % 4 == 0) {
+								System.out.print("(0 0)");
+							} else if(entry.getKey() % 4 == 1) {
+								System.out.print("(0 1)");
+							} else if(entry.getKey() % 4 == 2) {
+								System.out.print("(1 0)");
+							} else if(entry.getKey() % 4 == 3) {
+								System.out.print("(1 1)");
+							}
+							System.out.println();
+							System.out.println();
+							*/
+					    }
+					    
+					    //System.out.println("next");
+					}
 					curConfigs = new HashMap<Long, PartialGen2>();
 					
 					// Took from: https://sentry.io/answers/iterate-hashmap-java/
@@ -267,9 +361,14 @@ Final number for N = 34: 4565553929115769162 (took about 1 hour and 30 minutes) 
 											
 											if(length == width + 1) {
 												
+												/*if(width == 5) {
+													System.out.println("Add " + numSolutions + ". (length == width + 1)");
+												}*/
 												ret = ret.add(numSolutions);
 											} else {
-												
+												/*if(width == 5) {
+													System.out.println("Add " + numSolutions.multiply(TWO) + ".");
+												}*/
 												ret = ret.add(numSolutions.multiply(TWO));								
 											}
 										}
@@ -495,6 +594,7 @@ Final number for N = 34: 4565553929115769162 (took about 1 hour and 30 minutes) 
 			} //END length loop
 			
 			
+			//System.out.println("Partial check: " + ret);
 			
 		} //END big width loop
 		
@@ -609,7 +709,10 @@ Final number for N = 34: 4565553929115769162 (took about 1 hour and 30 minutes) 
 		//END TODO
 		*/
 		
-		ret += getMinDistanceBonus1s(boundary);
+		//ret += getMinDistanceBonus1s(boundary);
+		
+		//TODO -1 to fix for now...
+		ret += RecursiveMinSquaresNeedToAttach.getMinDistRecursive(boundary) - 1;
 		
 		return ret;
 	}

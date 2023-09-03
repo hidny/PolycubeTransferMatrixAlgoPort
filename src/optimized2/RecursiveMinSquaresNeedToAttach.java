@@ -5,10 +5,11 @@ public class RecursiveMinSquaresNeedToAttach {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 
-		standardTests();
+		//standardTests();
 		//specificTests();
 		
 		//specificTests2();
+		testWith5();
 	}
 	
 	
@@ -223,6 +224,45 @@ public class RecursiveMinSquaresNeedToAttach {
 		System.out.println();
 	}
 
+	public static void testWith5() {
+		
+		System.out.println("Test 5s:");
+		int test5s[]  = new int[] {4, 4, 1, 2, 2};
+		if(getMinDistRecursive(test5s) != 2) {
+			System.out.println("Test testBetween3s2 failed! " + getMinDistRecursive(test5s));
+		}
+		
+		int test5s2[]  = new int[] {4, 0, 1, 0, 2};
+		if(getMinDistRecursive(test5s2) != 2) {
+			System.out.println("Test testBetween3s2 failed! " + getMinDistRecursive(test5s2));
+		}
+
+		int test5s3[]  = new int[] {4, 0, 0, 1, 2};
+		if(getMinDistRecursive(test5s3) != 1) {
+			System.out.println("Test test5s3 failed! " + getMinDistRecursive(test5s3));
+		}
+		
+		int test5s4[]  = new int[] {0, 0, 0, 1, 0};
+		if(getMinDistRecursive(test5s4) != 0) {
+			System.out.println("Test test5s4 failed! " + getMinDistRecursive(test5s4));
+		}
+
+		int test5s5[]  = new int[] {1, 0, 0, 1, 0};
+		if(getMinDistRecursive(test5s5) != 3) {
+			System.out.println("Test test5s5 failed! " + getMinDistRecursive(test5s5));
+		}
+		
+		int test5s6[]  = new int[] {1, 0, 0, 0, 0};
+		if(getMinDistRecursive(test5s6) != 0) {
+			System.out.println("Test test5s6 failed! " + getMinDistRecursive(test5s6));
+		}
+		
+		int test5s7[]  = new int[] {0, 0, 0, 0, 1};
+		if(getMinDistRecursive(test5s7) != 0) {
+			System.out.println("Test test5s7 failed! " + getMinDistRecursive(test5s7));
+		}
+		System.out.println("tests pass");
+	}
 	
 	public static void specificTests2() {
 		
@@ -319,7 +359,7 @@ public class RecursiveMinSquaresNeedToAttach {
 		} while(curIndex < boundary.length);
 		
 		
-		System.out.println("------");
+		//System.out.println("------");
 		
 		
 		return Math.max(ret,  0);

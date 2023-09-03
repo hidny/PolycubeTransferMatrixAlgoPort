@@ -17,7 +17,7 @@ It looks like I got away with it!
 	public int nCur;
 	
 	PartialGen2(int maxNumAnimals) {
-		this.numAnimals = new long[maxNumAnimals];
+		this.numAnimals = new long[maxNumAnimals + 1];
 		
 		//I don't think it's needed, but whatever:
 		for(int i=0; i<this.numAnimals.length; i++) {
