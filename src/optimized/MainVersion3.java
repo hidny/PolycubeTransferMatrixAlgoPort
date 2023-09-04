@@ -32,15 +32,15 @@ public class MainVersion3 {
 		
 		initLowerTwoDissapeared();
 		
-		solve(10);
+		//solve(10);
 		
-		//testArray();
+		testArray();
 		//System.out.println("Num hashes removed: " + debugTooBig);
 	}
 	
 	public static void testArray() {
 		
-		int MAX = 30;
+		int MAX = 31;
 		
 		BigInteger output[] = new BigInteger[MAX + 1];
 		for(int i=0; i<MAX + 1; i++) {
@@ -678,9 +678,10 @@ Only off by 7
 			
 			//Need a sideways move... but that's already covered by the width = length constraint
 			//So only count it if minLengthToGo == 0
-			if(minLengthToGo == 0) {
-				ret++;
-			}
+			//TODO:
+			//if(minLengthToGo == 0) {
+			//	ret++;
+			//}
 			//Nevermind it!
 			
 			for(int i=0; i<boundary.length && boundary[i] == 0; i++) {

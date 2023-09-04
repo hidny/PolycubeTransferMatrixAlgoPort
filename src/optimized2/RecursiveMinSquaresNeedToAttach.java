@@ -5,11 +5,11 @@ public class RecursiveMinSquaresNeedToAttach {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 
-		//standardTests();
+		standardTests();
 		//specificTests();
 		
-		//specificTests2();
-		testWith5();
+		specificTests2();
+		//testWith5();
 	}
 	
 	
@@ -165,7 +165,7 @@ public class RecursiveMinSquaresNeedToAttach {
 		System.out.println("Test random complicated:");
 		
 		int testRandomComplicated[] = new int[] {4,0,1, 0 ,4,2,0,0,4,3,3, 0,0,2, 0, 4, 3, 3, 2, 0, 0, 0, 2};
-
+											//   * * * *   **  * * *          *  *  *
 		if(getMinDistRecursive(testRandomComplicated) != 11) {
 			System.out.println("Test testRandomComplicated failed! " + getMinDistRecursive(testRandomComplicated));
 		}
@@ -219,6 +219,23 @@ public class RecursiveMinSquaresNeedToAttach {
 			System.out.println("Test testTricky1 failed! " + getMinDistRecursive(testTricky1));
 		}
 		
+		// more tests
+
+		int testTricky2[]  = new int[] {0, 4, 0, 3, 0, 2, 0, 4, 2};
+		if(getMinDistRecursive(testTricky2) != 2) {
+			System.out.println("Test testTricky2 failed! " + getMinDistRecursive(testTricky1));
+		}
+		
+		int testTricky3[]  = new int[] {0, 4, 0, 1, 0, 2, 0, 4, 2};
+		if(getMinDistRecursive(testTricky3) != 4) {
+			System.out.println("Test testTricky3 failed! " + getMinDistRecursive(testTricky3));
+		}
+		
+
+		int testTricky4[]  = new int[] {0, 4, 0, 4, 2, 0, 2, 0, 4, 2};
+		if(getMinDistRecursive(testTricky4) != 4) {
+			System.out.println("Test testTricky3 failed! " + getMinDistRecursive(testTricky4));
+		}
 		
 		System.out.println("Done test");
 		System.out.println();
@@ -261,6 +278,13 @@ public class RecursiveMinSquaresNeedToAttach {
 		if(getMinDistRecursive(test5s7) != 0) {
 			System.out.println("Test test5s7 failed! " + getMinDistRecursive(test5s7));
 		}
+		
+
+		
+		int test5s8[]  = new int[] {4, 1, 2, 0, 1};
+		if(getMinDistRecursive(test5s8) != 3) {
+			System.out.println("Test test5s7 failed! " + getMinDistRecursive(test5s8));
+		}
 		System.out.println("tests pass");
 	}
 	
@@ -268,9 +292,10 @@ public class RecursiveMinSquaresNeedToAttach {
 		
 		System.out.println("Hello specific test 2");
 
-		int testBetween3s2[]  = new int[] {0, 4, 0, 3,0,1,3,3,0,3,0,0,4,2,0,0,0,0,3, 2, 0};
-		if(getMinDistRecursive(testBetween3s2) != 5) {
-			System.out.println("Test testBetween3s2 failed! " + getMinDistRecursive(testBetween3s2));
+		int testRandomComplicated[] = new int[] {4,0,1, 0 ,4,2,0,0,4,3,3, 0,0,2, 0, 4, 3, 3, 2, 0, 0, 0, 2};
+		//   * * * *   **  * * *          *  *  *
+		if(getMinDistRecursive(testRandomComplicated) != 11) {
+		System.out.println("Test testRandomComplicated failed! " + getMinDistRecursive(testRandomComplicated));
 		}
 
 	}
@@ -423,8 +448,15 @@ public class RecursiveMinSquaresNeedToAttach {
 					}
 				}
 				
+			
 			}
-
+			ret[TOP_INDEX_USED] = 1;
+			if(curComingFromTop) {
+				ret[BOTTOM_INDEX_USED] = 1;
+			} else {
+				ret[BOTTOM_INDEX_USED] = 0;
+			}
+			
 		} else if( ! comingFromTop) {
 			
 			//TODO: mirror above, but do it from the bottom.
@@ -477,6 +509,13 @@ public class RecursiveMinSquaresNeedToAttach {
 					}
 				}
 				
+			}
+			
+			ret[BOTTOM_INDEX_USED] = 1;
+			if(curComingFromBottom) {
+				ret[TOP_INDEX_USED] = 1;
+			} else {
+				ret[TOP_INDEX_USED] = 0;
 			}
 		}
 
@@ -537,6 +576,8 @@ public class RecursiveMinSquaresNeedToAttach {
 					
 					curPrevStartIndexUsed = true;
 					prevStartIndexTop = curIndexFromTop;
+					
+					
 
 				} else if(boundary[curIndexFromTop] == 4) {
 					
@@ -551,9 +592,8 @@ public class RecursiveMinSquaresNeedToAttach {
 						curMinSquaresCount++;
 					}
 
-					if(recursion[2] == 1) {
-						curPrevStartIndexUsed = true;
-					}
+					curPrevStartIndexUsed = recursion[BOTTOM_INDEX_USED] == 1;
+					
 					prevStartIndexTop = index2Equiv;
 					curIndexFromTop = index2Equiv;
 					
@@ -562,7 +602,6 @@ public class RecursiveMinSquaresNeedToAttach {
 					for(int k=0; k<boundary.length; k++) {
 						System.out.print(boundary[k] + " ");
 					}
-					System.out.println("DEBUG3");
 					System.exit(1);
 				}
 				
@@ -613,9 +652,8 @@ public class RecursiveMinSquaresNeedToAttach {
 						curMinSquaresCount++;
 					}
 
-					if(recursion[1] == 1) {
-						curPrevStartIndexUsedFromBottom = true;
-					}
+					curPrevStartIndexUsedFromBottom = recursion[TOP_INDEX_USED] == 1;
+
 					prevStartIndexBottom = index4Equiv;
 					curIndexFromBottom = index4Equiv;
 					
