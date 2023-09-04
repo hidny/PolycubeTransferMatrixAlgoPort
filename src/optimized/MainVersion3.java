@@ -675,6 +675,7 @@ Only off by 7
 		int boundary[] = getBoundaryLineFromSignature(signature, width);
 		
 		int ret = 0;
+		boolean boundaryAllZeros = false;
 		
 		if( ! origUpperBorderTouched) {
 			
@@ -689,9 +690,12 @@ Only off by 7
 			for(int i=0; i<boundary.length && boundary[i] == 0; i++) {
 				ret++;
 			}
+			
+			//In practice, this won't happen, but whatever!
+			boundaryAllZeros = ret >= boundary.length;
 		}
 		
-		if( ! origLowerBorderTouched) {
+		if( ! origLowerBorderTouched && !boundaryAllZeros) {
 			
 			for(int i=boundary.length - 1; i>=0 && boundary[i] == 0; i--) {
 				ret++;
@@ -715,7 +719,7 @@ Only off by 7
 		//ret += getMinDistanceBonus1s(boundary);
 		
 		//TODO -1 to fix for now...
-		ret += RecursiveMinSquaresNeedToAttach.getMinDistRecursive(boundary) - 1;
+		ret += RecursiveMinSquaresNeedToAttach.getMinDistRecursive(boundary);
 		
 		return ret;
 	}
