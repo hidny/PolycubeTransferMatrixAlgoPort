@@ -33,7 +33,7 @@ public class MainVersion3 {
 		
 		initLowerTwoDissapeared();
 		
-		solve(10);
+		solve(5);
 		
 		//testArray();
 		//System.out.println("Num hashes removed: " + debugTooBig);
@@ -521,6 +521,88 @@ Only off by 7
 							}
 							
 							long newSignature = getSignature(boundaryLine, upperBorderTouched, lowerBorderTouuched);
+							
+							int n = -1;
+							
+							if(fillSquare == 0) {
+								n = prevPartialGen.nCur;
+							} else {
+								n = prevPartialGen.nCur + 1;
+							}
+							
+							if(curConfigs.containsKey(newSignature)) {
+								n = Math.min( curConfigs.get(newSignature).nCur, n);
+							}
+							
+							if(curConfigs.containsKey(newSignature + DEBUG_POISON_FLAG)) {
+								n = Math.min( curConfigs.get(newSignature + DEBUG_POISON_FLAG).nCur, n);
+							}
+							
+							
+							
+							if(n + minLengthToGo + getNumToAddToCompleteBasedOnSignature(newSignature, width, minLengthToGo) > numSquares - 1) {
+								newSignature += DEBUG_POISON_FLAG;
+								
+								/*System.out.println("Applying poison flag");
+								//System.out.println(DEBUG_POISON_FLAG);
+								System.out.println("After:");
+								for(int k=0; k<boundaryLine.length; k++) {
+									System.out.print(boundaryLine[k] + ", ");
+								}
+								
+								System.out.println();
+								System.out.println("Wdith: " + width);
+								System.out.println("tmp.nCur: " + n);
+								System.out.println("minLengthToGo: " + minLengthToGo);
+								System.out.println("Recursion: " + getNumToAddToCompleteBasedOnSignature(newSignature, width, minLengthToGo));
+								
+								if(upperBorderTouched) {
+									System.out.println("Upper touched");
+								}
+								
+								if(lowerBorderTouuched) {
+									System.out.println("lower touched");
+								}
+								System.out.println();
+								
+								System.out.println();
+								
+								System.out.println("-----");
+								*/
+							} else if(curSignature >= DEBUG_POISON_FLAG){
+								System.out.println("WARNING: recovered from poison!");
+								
+								int boundaryLineBefore[] =  getBoundaryLineFromSignature(curSignature, width);
+								System.out.println("Before:");
+								for(int k=0; k<boundaryLineBefore.length; k++) {
+									System.out.print(boundaryLineBefore[k] + ", ");
+								}
+								
+								System.out.println();
+								System.out.println("After:");
+								for(int k=0; k<boundaryLine.length; k++) {
+									System.out.print(boundaryLine[k] + ", ");
+								}
+								
+								System.out.println();
+								System.out.println("Wdith: " + width);
+								System.out.println("tmp.nCur: " + n);
+								System.out.println("minLengthToGo: " + minLengthToGo);
+								System.out.println("Recursion: " + getNumToAddToCompleteBasedOnSignature(newSignature, width, minLengthToGo));
+								
+								if(upperBorderTouched) {
+									System.out.println("Upper touched");
+								}
+								
+								if(lowerBorderTouuched) {
+									System.out.println("lower touched");
+								}
+								System.out.println();
+								
+								System.out.println();
+								
+							}
+							
 						
 							if(fillSquare == 0) {
 								if(curConfigs.containsKey(newSignature)) {
@@ -529,6 +611,8 @@ Only off by 7
 									curConfigs.put(newSignature, PartialGen2.hardCopy(prevPartialGen));
 								}
 							} else {
+								
+								
 								//"with an addition weight factor u on the source if the new site is occupied"
 								// Why not just say weight factor of 1?? Update: I still don't know, but I got away with assuming u=1.
 								if(curConfigs.containsKey(newSignature)) {
@@ -540,6 +624,7 @@ Only off by 7
 									
 									PartialGen2 tmp = PartialGen2.hardCopyAdd1SquareThough(prevPartialGen);
 									
+									/*
 									if(tmp.nCur + minLengthToGo + getNumToAddToCompleteBasedOnSignature(newSignature, width, minLengthToGo) > numSquares) {
 										//debugTooBig++;
 										//Too big.
@@ -568,13 +653,19 @@ Only off by 7
 												}
 												System.out.println();
 											}
+											
+											
+											
 										}
 										
 									} else {
 
-										curConfigs.put(newSignature, tmp);
+										//curConfigs.put(newSignature, tmp);
 									}
 									// adds 1
+									*/
+
+									curConfigs.put(newSignature, tmp);
 								}
 							}
 							
@@ -616,7 +707,15 @@ Only off by 7
 						}
 					}
 					
-					
+					if(prevConfigs.containsKey(signatureToRemove + DEBUG_POISON_FLAG)) {
+
+						prevConfigs.remove(signatureToRemove + DEBUG_POISON_FLAG);
+						
+						if(upperTouched || lowerTouched || length > 1) {
+							System.out.println("ERROR: didn't expect to find empty boundary here!");
+							System.exit(1);
+						}
+					}
 				}
 
 			} //END length loop
@@ -675,6 +774,8 @@ Only off by 7
 		return ret;
 	}
 	
+	public static final long DEBUG_POISON_FLAG = (long)(4 * Math.pow(5,  15));
+	
 	public static int[] getBoundaryLineFromSignature(long signature, int width) {
 		
 		int ret[] = new int[width];
@@ -702,22 +803,18 @@ Only off by 7
 		
 		int ret = 0;
 		
+		boolean boundaryAllZeros = true;
+		
 		if( ! origUpperBorderTouched) {
-			
-			//Need a sideways move... but that's already covered by the width = length constraint
-			//So only count it if minLengthToGo == 0
-			//TODO:
-			//if(minLengthToGo == 0) {
-			//	ret++;
-			//}
-			//Nevermind it!
 			
 			for(int i=0; i<boundary.length && boundary[i] == 0; i++) {
 				ret++;
 			}
 		}
 		
-		if( ! origLowerBorderTouched) {
+		boundaryAllZeros = ret >= boundary.length;
+		
+		if( ! origLowerBorderTouched && ! boundaryAllZeros) {
 			
 			for(int i=boundary.length - 1; i>=0 && boundary[i] == 0; i--) {
 				ret++;
@@ -741,7 +838,7 @@ Only off by 7
 		//ret += getMinDistanceBonus1s(boundary);
 		
 		//TODO -1 to fix for now...
-		ret += RecursiveMinSquaresNeedToAttach.getMinDistRecursive(boundary);
+		ret += RecursiveMinSquaresNeedToAttach.getMinDistRecursive(boundary) - 1;
 		
 		return ret;
 	}
@@ -846,7 +943,7 @@ Only off by 7
 					}
 					
 
-					long signature = getSignature(fakeBoundary, tmp1, tmp2);
+					long signature = getSignature(fakeBoundary, tmp1, tmp2) + DEBUG_POISON_FLAG;
 					
 					int newBoundary[] =  getBoundaryLineFromSignature(signature, fakeBoundary.length);
 					
