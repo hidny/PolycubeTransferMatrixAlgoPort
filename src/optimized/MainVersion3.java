@@ -28,19 +28,20 @@ public class MainVersion3 {
 	
 	public static void main(String args[]) {
 		
+		System.out.println("START");
 		testSignature();
 		
 		initLowerTwoDissapeared();
 		
-		//solve(10);
+		solve(10);
 		
-		testArray();
+		//testArray();
 		//System.out.println("Num hashes removed: " + debugTooBig);
 	}
 	
 	public static void testArray() {
 		
-		int MAX = 31;
+		int MAX = 12;
 		
 		BigInteger output[] = new BigInteger[MAX + 1];
 		for(int i=0; i<MAX + 1; i++) {
@@ -542,6 +543,33 @@ Only off by 7
 									if(tmp.nCur + minLengthToGo + getNumToAddToCompleteBasedOnSignature(newSignature, width, minLengthToGo) > numSquares) {
 										//debugTooBig++;
 										//Too big.
+										
+										if(width == 5
+												&& RecursiveMinSquaresNeedToAttach.getMinDistRecursive(boundaryLine) > 0
+												&& tmp.nCur + minLengthToGo + getNumToAddToCompleteBasedOnSignature(newSignature, width, minLengthToGo) == numSquares + 1) {
+
+											if(tmp.nCur + minLengthToGo <= numSquares) {
+												System.out.println("DEBUG TOO BIG BY 1");
+												
+												for(int k=0; k<boundaryLine.length; k++) {
+													System.out.print(boundaryLine[k] + ",");
+												}
+												System.out.println();
+												System.out.println("tmp.nCur: " + tmp.nCur);
+												System.out.println("minLengthToGo: " + minLengthToGo);
+												System.out.println("Recursion: " + getNumToAddToCompleteBasedOnSignature(newSignature, width, minLengthToGo));
+												
+												if(upperBorderTouched) {
+													System.out.println("Upper touched");
+												}
+												
+												if(lowerBorderTouuched) {
+													System.out.println("lower touched");
+												}
+												System.out.println();
+											}
+										}
+										
 									} else {
 
 										curConfigs.put(newSignature, tmp);
@@ -713,7 +741,7 @@ Only off by 7
 		//ret += getMinDistanceBonus1s(boundary);
 		
 		//TODO -1 to fix for now...
-		ret += RecursiveMinSquaresNeedToAttach.getMinDistRecursive(boundary) - 1;
+		ret += RecursiveMinSquaresNeedToAttach.getMinDistRecursive(boundary);
 		
 		return ret;
 	}

@@ -8,8 +8,8 @@ public class RecursiveMinSquaresNeedToAttach {
 		standardTests();
 		//specificTests();
 		
-		specificTests2();
-		//testWith5();
+		//specificTests2();
+		testWith5();
 	}
 	
 	
@@ -237,6 +237,7 @@ public class RecursiveMinSquaresNeedToAttach {
 			System.out.println("Test testTricky3 failed! " + getMinDistRecursive(testTricky4));
 		}
 		
+		
 		System.out.println("Done test");
 		System.out.println();
 	}
@@ -283,9 +284,15 @@ public class RecursiveMinSquaresNeedToAttach {
 		
 		int test5s8[]  = new int[] {4, 1, 2, 0, 1};
 		if(getMinDistRecursive(test5s8) != 3) {
-			System.out.println("Test test5s7 failed! " + getMinDistRecursive(test5s8));
+			System.out.println("Test test5s8 failed! " + getMinDistRecursive(test5s8));
 		}
-		System.out.println("tests pass");
+		
+		int test5s9[] = new int[] {0,4,2,0,1};
+		if(getMinDistRecursive(test5s9) != 2) {
+			System.out.println("Test test5s9 failed! " + getMinDistRecursive(test5s9));
+		}
+		
+		System.out.println("tests done");
 	}
 	
 	public static void specificTests2() {
