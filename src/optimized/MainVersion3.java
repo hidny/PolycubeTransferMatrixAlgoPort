@@ -40,7 +40,7 @@ public class MainVersion3 {
 	
 	public static void testArray() {
 		
-		int MAX = 31;
+		int MAX = 40;
 		
 		BigInteger output[] = new BigInteger[MAX + 1];
 		for(int i=0; i<MAX + 1; i++) {
@@ -90,6 +90,8 @@ Final number for N = 31:   74541651404935148 (took almost 20 minutes)
 Final number for N = 32:  293560133910477776 (took about 15 minutes)
 Final number for N = 33: 1157186142148293638 (took about 30 minutes)
 Final number for N = 34: 4565553929115769162 (took about 1 hour and 30 minutes) **
+Final number for N = 35: 18027932215016128134 (1.5 hours?)
+Final number for N = 36: 71242712815411950635 (3 hours?)
 
 	 */
 
