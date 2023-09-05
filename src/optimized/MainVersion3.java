@@ -32,9 +32,9 @@ public class MainVersion3 {
 		
 		initLowerTwoDissapeared();
 		
-		//solve(10);
+		solve(10);
 		
-		testArray();
+		//testArray();
 		//System.out.println("Num hashes removed: " + debugTooBig);
 	}
 	
@@ -261,6 +261,8 @@ Only off by 7
 				
 				for(int i=0; i<width; i++) {
 					
+					debugJ = i;
+					
 					if(width == 5) {
 						Iterator<Map.Entry<Long, PartialGen2>> iterator = prevConfigs.entrySet().iterator();					
 						
@@ -329,6 +331,12 @@ Only off by 7
 						
 						// Assume there's no new square:
 						for(int fillSquare=0; fillSquare<2; fillSquare++) {
+							
+							debugFillSquare = fillSquare;
+							tileBefore = -1;
+							if(boundaryLine.length == 5) {
+								tileBefore = boundaryLine[3]; 
+							}
 
 							boundaryLine =  getBoundaryLineFromSignature(curSignature, width);
 							
@@ -718,11 +726,47 @@ Only off by 7
 		
 		//ret += getMinDistanceBonus1s(boundary);
 		
+		if(RecursiveMinSquaresNeedToAttach.getMinDistRecursive(boundary) == 4) {
+			
+			debugIndex++;
+			//System.out.println("Doh1");
+
+			
+			//Works:
+			//if(debugJ == 4 || debugJ == 1 || debugJ == 0 || debugJ == 2) {
+			
+			//Doesn't work:
+			if(debugJ == 3) {
+				System.out.println("Debug");
+				
+				for(int k=0; k<boundary.length; k++) {
+					System.out.print(boundary[k] + ", ");
+				}
+				System.out.println();
+				System.out.println("Debug J: " + debugJ);
+				System.out.println("debugFillSquare: " + debugFillSquare);
+				System.out.println("tileBefore: " + tileBefore);
+				System.out.println("minLengthToGo: " + minLengthToGo);
+				System.out.println();
+				
+				
+				return ret + RecursiveMinSquaresNeedToAttach.getMinDistRecursive(boundary);
+
+			} else {
+				
+			}
+		}
+		
 		//TODO -1 to fix for now...
-		ret += RecursiveMinSquaresNeedToAttach.getMinDistRecursive(boundary);
+		ret += RecursiveMinSquaresNeedToAttach.getMinDistRecursive(boundary) - 1;
 		
 		return ret;
 	}
+	
+	public static int debugJ = -1;
+	public static int debugIndex = 0;
+	public static int debugFillSquare = 0;
+	public static int tileBefore = -1;
 	
 	public static int getBasicNumReqTouching(int boundary[]) {
 		int numFound=0;
