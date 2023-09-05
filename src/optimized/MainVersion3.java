@@ -719,7 +719,13 @@ Only off by 7
 		//ret += getMinDistanceBonus1s(boundary);
 		
 		//TODO -1 to fix for now...
-		ret += RecursiveMinSquaresNeedToAttach.getMinDistRecursive(boundary);
+		int tmpRecursive = RecursiveMinSquaresNeedToAttach.getMinDistRecursive(boundary);
+		ret += tmpRecursive;
+		
+		//This fixes the bug where I double count num squares to add because it's already counted in minLengthToGo:
+		if(minLengthToGo > 0 && tmpRecursive > 0) {
+			ret--;
+		}
 		
 		return ret;
 	}
