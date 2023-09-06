@@ -21,6 +21,7 @@ public class MainVersion4 {
 /* After I successfully port it, I'll try to reuse it to find the number of rotational symmetries in 2D
  * 
  * Then I'll to do the same thing for 2D reflections.
+ * Afterwards, I believe I will be able to find the number of free polyominoes (A000105) up to N=56 (or go as high as the number of fixed 2D solutions goes)
  * 
  */
 
@@ -431,25 +432,29 @@ Final number for N = 36: 71242712815411950635 (3 hours?)
 									curConfigs.put(newSignature, PartialGen3.hardCopy(prevPartialGen));
 								}
 							} else {
-								//"with an addition weight factor u on the source if the new site is occupied"
-								// Why not just say weight factor of 1?? Update: I still don't know, but I got away with assuming u=1.
-								if(curConfigs.containsKey(newSignature)) {
-									// adds 1
-									
-									curConfigs.put(newSignature, PartialGen3.hardCopyMerge(curConfigs.get(newSignature), PartialGen3.hardCopyAdd1SquareThough(prevPartialGen)));
-									
+								
+								int maxSquaresAllowedForSignature = numSquares - (getNumToAddToCompleteBasedOnSignature(newSignature, width, minLengthToGo) + minLengthToGo);
+								
+								if(maxSquaresAllowedForSignature < prevPartialGen.minSquares + 1) {
+									//Nope
 								} else {
-									
-									PartialGen3 tmp = PartialGen3.hardCopyAdd1SquareThough(prevPartialGen);
-									
-									if(tmp.minSquares + minLengthToGo + getNumToAddToCompleteBasedOnSignature(newSignature, width, minLengthToGo) > numSquares) {
-										//debugTooBig++;
-										//Too big.
+								
+									//"with an addition weight factor u on the source if the new site is occupied"
+									// Why not just say weight factor of 1?? Update: I still don't know, but I got away with assuming u=1.
+
+									if(curConfigs.containsKey(newSignature)) {
+										// adds more memory:
+										
+										curConfigs.put(newSignature, PartialGen3.hardCopyMerge(curConfigs.get(newSignature), PartialGen3.hardCopyAdd1SquareThough(prevPartialGen, maxSquaresAllowedForSignature)));
+										
 									} else {
+										
+										PartialGen3 tmp = PartialGen3.hardCopyAdd1SquareThough(prevPartialGen, maxSquaresAllowedForSignature);
 
 										curConfigs.put(newSignature, tmp);
+										
+	
 									}
-									// adds 1
 								}
 							}
 

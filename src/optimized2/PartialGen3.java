@@ -73,16 +73,24 @@ It looks like I got away with it!
 		
 	}
 	
-	public static PartialGen3 hardCopyAdd1SquareThough(PartialGen3 pg) {
-		long ret[] = new long[pg.numAnimals.length];
+	public static PartialGen3 hardCopyAdd1SquareThough(PartialGen3 pg, int maxForNumSquaresTarget) {
+
+		int retMin = pg.minSquares + 1;
+		int retMax = Math.min(pg.maxSquares + 1, maxForNumSquaresTarget);
+		
+
+		if(retMin > retMax) {
+			System.out.println("ERROR: partialGen3's hardCopyAdd1SquareThough has retMin > retMax");
+			System.exit(1);
+		}
+		
+		long ret[] = new long[retMax - retMin + 1];
 		
 		ret[0] = 0L;
 		
-		for(int i=0; i<pg.numAnimals.length; i++) {
+		for(int i=0; i<ret.length; i++) {
 			ret[i] = pg.numAnimals[i];
 		}
-		int retMin = pg.minSquares + 1;
-		int retMax = pg.maxSquares + 1;
 		
 		
 		return new PartialGen3(ret, retMin, retMax);
