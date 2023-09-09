@@ -51,9 +51,11 @@ public class PrimeFinder {
 			System.out.println();
 		}
 		
-		short testStorage[] = new short[2];
+		int NUM_PRIMES = 3;
 		
-		for(int i=0; i<2; i++) {
+		short testStorage[] = new short[NUM_PRIMES];
+		
+		for(int i=0; i<NUM_PRIMES; i++) {
 			testStorage[i] = (short)0;
 		}
 		
@@ -66,7 +68,7 @@ public class PrimeFinder {
 		for(int i=0; i<1000000001; i++) {
 			
 			
-			for(int j=0; j<2; j++) {
+			for(int j=0; j<NUM_PRIMES; j++) {
 				testStorage[j] = (short) ((testStorage[j] + MULT) % primes[j]);
 			}
 			
@@ -75,6 +77,17 @@ public class PrimeFinder {
 			BigInteger tmp2 = deriveTotalBasedOnMods2(testStorage, primes, curProdPrimes, inverses);
 			if(tmp1.compareTo(tmp2) != 0) {
 				System.out.println("ERROR: " + tmp1 + " vs " + tmp2);
+				
+				System.out.println("Primes used:");
+				
+				long prod = 1L;
+				for(int j=0; j<NUM_PRIMES; j++) {
+					System.out.println(primes[j]);
+					prod *= primes[j];
+				}
+				
+				System.out.println("Product of the primes: " + prod);
+				
 				System.exit(1);
 			} else {
 				System.out.println(tmp2);
