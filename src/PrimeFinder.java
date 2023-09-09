@@ -19,31 +19,33 @@ public class PrimeFinder {
 		}
 		
 		
-		BigInteger curMod[] = new BigInteger[MAX_NUM_PRIMES_TO_USE];
+		BigInteger curProdPrimes[] = new BigInteger[MAX_NUM_PRIMES_TO_USE];
 		BigInteger inverses[] = new BigInteger[MAX_NUM_PRIMES_TO_USE];
 		
 		
 		for(int i=0; i<primes.length; i++) {
-			curMod[i] = BigInteger.ONE;
+			curProdPrimes[i] = BigInteger.ONE;
 			inverses[i] = BigInteger.ZERO;
 		}
 		for(int i=0; i<primes.length; i++) {
 			
 			if(i == 0) {
-				curMod[i] = new BigInteger(primes[i] + "");
+				curProdPrimes[i] = new BigInteger(primes[i] + "");
 			} else {
-				curMod[i] = curMod[i-1].multiply(new BigInteger(primes[i] + ""));
+				curProdPrimes[i] = curProdPrimes[i-1].multiply(new BigInteger(primes[i] + ""));
 			}
 			
 			if(i < primes.length - 1) {
-				inverses[i] = getInverse(curMod[i], primes[i+1]);
+				inverses[i] = getInverse(curProdPrimes[i], primes[i+1]);
 			}
 			
 		}
 		
 		System.out.println("Mod and inverses:");
 		for(int i=0; i<primes.length - 1; i++) {
-			System.out.println(curMod[i]);
+			System.out.println("i = " + i);
+			System.out.println(primes[i]);
+			System.out.println(curProdPrimes[i]);
 			System.out.println(inverses[i]);
 			System.out.println("Next prime: " + primes[i+1]);
 			System.out.println();
@@ -54,6 +56,8 @@ public class PrimeFinder {
 		for(int i=0; i<2; i++) {
 			testStorage[i] = (short)0;
 		}
+		
+		
 		
 		int MULT = 1;
 		
@@ -67,8 +71,8 @@ public class PrimeFinder {
 			}
 			
 			BigInteger tmp1 = new BigInteger((MULT*(i+1)) + "");
-			BigInteger tmp2 = deriveTotalBasedOnMods(testStorage, primes, inverses);
-			
+			//BigInteger tmp2 = deriveTotalBasedOnMods(testStorage, primes, inverses);
+			BigInteger tmp2 = deriveTotalBasedOnMods2(testStorage, primes, curProdPrimes, inverses);
 			if(tmp1.compareTo(tmp2) != 0) {
 				System.out.println("ERROR: " + tmp1 + " vs " + tmp2);
 				System.exit(1);
@@ -77,14 +81,28 @@ public class PrimeFinder {
 			}
 			
 		}
-	}
-	
-	//TODO: make this work with more primes
-	public static BigInteger deriveTotalBasedOnMods(short storedMods[], short primes[], BigInteger inverses[]) {
 		
-		BigInteger k = new BigInteger((storedMods[1] - storedMods[0]) + "").multiply(inverses[0]).mod(new BigInteger("" + primes[1]));
+		
+	}
 
-		return k.multiply(new BigInteger(primes[0] + "")).add(new BigInteger(storedMods[0] + ""));
+	//TODO: test that this works with more primes
+	public static BigInteger deriveTotalBasedOnMods2(short storedMods[], short primes[], BigInteger curProdPrimes[], BigInteger inverses[]) {
+		
+
+		BigInteger curRet = new BigInteger("" + storedMods[0]);
+		
+		
+		for(int numStoredModsUsed = 1; numStoredModsUsed < storedMods.length; numStoredModsUsed++) {
+			
+			BigInteger nextStoredMod = new BigInteger(storedMods[numStoredModsUsed] + ""); 
+			
+			BigInteger k = (nextStoredMod.subtract(curRet)).multiply(inverses[numStoredModsUsed - 1]).mod(new BigInteger("" + primes[numStoredModsUsed]));
+
+			curRet = curRet.add(k.multiply(new BigInteger(curProdPrimes[numStoredModsUsed - 1] + "")));
+		
+		}
+		
+		return  curRet;
 	}
 	
 	public static void testPrimes() {
