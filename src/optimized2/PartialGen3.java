@@ -11,7 +11,7 @@ up that particular configuration."
 I don't know why it has to be inserted to the left of the intersection...
 
 I'll try inserted to the left or above and see what happens.
-It looks like I got away with it!
+Update: I got away with it!
 
 	 */
 	public int minSquares;

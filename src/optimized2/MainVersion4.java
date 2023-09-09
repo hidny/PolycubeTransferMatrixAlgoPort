@@ -18,11 +18,10 @@ public class MainVersion4 {
 	September 11, 2018
 "*/
 
-/* After I successfully port it, I'll try to reuse it to find the number of rotational symmetries in 2D
- * 
- * Then I'll to do the same thing for 2D reflections.
- * Afterwards, I believe I will be able to find the number of free polyominoes (A000105) up to N=56 (or go as high as the number of fixed 2D solutions goes)
- * 
+/* After I successfully port it, I'll try to modify it to find the number of rotational symmetries in 2D,
+ * then I'll to do the same thing for 2D reflections.
+ * Afterwards, I believe I will be able to deduce the number of free polyominoes (A000105) up to N=56 (or go as high as the number of fixed 2D solutions goes (fixed: https://oeis.org/A001168) )
+ * My only doubt is that my program might be so inefficient that N=56 is still out of reach even when given the handicap of being able to force a symmetry... We'll see though.
  */
 
 	//This is a lot less efficient than what they describe...
@@ -93,6 +92,10 @@ Final number for N = 33: 1157186142148293638 (took about 30 minutes)
 Final number for N = 34: 4565553929115769162 (took about 1 hour and 30 minutes) **
 Final number for N = 35: 18027932215016128134 (1.5 hours?)
 Final number for N = 36: 71242712815411950635 (3 hours?)
+Final number for N = 37: 281746550485032531911 (2 hours?)
+Final number for N = 38: 1115021869572604692100 (5 hours ?)
+Final number for N = 39: 2146745613912593599828 ( 5 hours?) (It's wrong! long type finally failed me...)
+// long overflow: (expectedAns - ans)/2^(64-1) = (4415695134978868448596-2146745613912593599828)/2^63 = 246. Looks like it overflowed 246 times...
 
 	 */
 
@@ -126,7 +129,6 @@ Final number for N = 36: 71242712815411950635 (3 hours?)
 	public static boolean mergingTwoSeparteSections[][][] = null;
 	
 	
-	//TODO: what if I did "static {"? Would that be better? 
 	public static void initLowerTwoDissapeared() {
 		lowerTwoDissapeared = new boolean[transitionMatrix.length][transitionMatrix[0].length][BOOL_OPTIONS_COUNT];
 		lowerFourDissapeared = new boolean[transitionMatrix.length][transitionMatrix[0].length][BOOL_OPTIONS_COUNT];
@@ -194,7 +196,7 @@ Final number for N = 36: 71242712815411950635 (3 hours?)
 			prevConfigs.put(seed, PartialGen3.hardCopy(curPartial));
 			
 			
-			//TODO: I added +5 at the end just in case...
+			//I added +5 at the end just in case it matters, but I think it doesn't.
 			for(int length=1; length <= numSquares - width + 1 + 5; length++) {
 				
 				//System.out.println("CUR LENGTH: " + length);

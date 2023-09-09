@@ -3,7 +3,6 @@ package optimized2;
 public class RecursiveMinSquaresNeedToAttach {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 
 		standardTests();
 		//specificTests();
@@ -336,7 +335,6 @@ public class RecursiveMinSquaresNeedToAttach {
 				
 				if(prevIndex != -1) {
 					ret += curIndex - prevIndex;
-					
 
 					if( ! prevStartIndexUsed) {
 						ret++;
@@ -360,7 +358,6 @@ public class RecursiveMinSquaresNeedToAttach {
 
 					//Check for bottom bonus:
 					prevStartIndexUsed = tmp[BOTTOM_INDEX_USED] == 1;
-					//System.out.println("TEST: " +curIndex + ": " + prevStartIndexUsed);
 
 					prevIndex = getIndex2Equiv(boundary, index4);
 
@@ -382,9 +379,6 @@ public class RecursiveMinSquaresNeedToAttach {
 				curIndex++;
 			}
 		} while(curIndex < boundary.length);
-		
-		
-		//System.out.println("------");
 		
 		
 		return Math.max(ret,  0);
@@ -422,15 +416,10 @@ public class RecursiveMinSquaresNeedToAttach {
 						
 						if(foundInBetween) {
 							
-							//System.out.println("In recur");
-							//TODO: ! USE_TOP_INDEX_GIVEN_CHOICE when coming from bottom.
 							int tmp[] = getNumBetween33(boundary, curComingFromTop, false, prevIndex, i, ! USE_TOP_INDEX_GIVEN_CHOICE);
 
-							//System.out.println("Out recur");
 							curComingFromTop = tmp[BOTTOM_INDEX_USED] == 1;
 							ret[RET_INDEX] += tmp[0];
-							//System.out.println("tmp[0]: " + tmp[0]);
-							//System.out.println("More: " + ret[RET_INDEX]);
 							
 						} else {
 
@@ -459,7 +448,7 @@ public class RecursiveMinSquaresNeedToAttach {
 			
 		} else if( ! comingFromTop) {
 			
-			//TODO: mirror above, but do it from the bottom.
+			// This just mirrors code above, but starts from bottom.
 			int prevIndex = index2;
 			boolean foundInBetween = false;
 			
@@ -482,16 +471,11 @@ public class RecursiveMinSquaresNeedToAttach {
 					} else if(boundary[i] == 3 || boundary[i] == 4) {
 						
 						if(foundInBetween) {
-							
-							//System.out.println("In recur");
-							//TODO: ! USE_TOP_INDEX_GIVEN_CHOICE when coming from bottom.
+
 							int tmp[] = getNumBetween33(boundary, false, curComingFromBottom, i, prevIndex, USE_TOP_INDEX_GIVEN_CHOICE);
 
-							//System.out.println("Out recur");
 							curComingFromBottom = tmp[TOP_INDEX_USED] == 1;
 							ret[RET_INDEX] += tmp[0];
-							//System.out.println("tmp[0]: " + tmp[0]);
-							//System.out.println("More: " + ret[RET_INDEX]);
 							
 						} else {
 
@@ -519,16 +503,11 @@ public class RecursiveMinSquaresNeedToAttach {
 			}
 		}
 
-		//System.out.println("END getMinDistRecursiveBetween4and2 " + comingFromTop + ", " + index4 + ", " + index2 + ": " + ret[0]);
-		//System.out.println();
-		//System.out.println("cur end: " + ret[RET_INDEX]);
 		return ret;
 	}
 	
 	
 	private static int[] getNumBetween33(int boundary[], boolean topIndexUsed, boolean bottomIndexUsed, int index4or3, int index3or2, boolean useTopIndexGivenChoice) {
-		
-		//System.out.println("getNumBetween33 " + topIndexUsed + ", " + index4or3 + ", " + index3or2);
 		
 		int numSectionsToAttachTo = getNumSectionsToAttachTo(boundary, index4or3, index3or2);
 		
@@ -539,9 +518,6 @@ public class RecursiveMinSquaresNeedToAttach {
 			
 		}
 		
-		if(index4or3 == 0 && index3or2==20) {
-			//System.out.println("Debug num Sections to attach to: " + numSectionsToAttachTo);
-		}
 		
 		//100000 is just a big number..
 		int ret = 1000000;
@@ -673,11 +649,6 @@ public class RecursiveMinSquaresNeedToAttach {
 			//Update the minimum squares required:
 			if(curMinSquaresCount < ret) {
 				
-				/*if(index4or3 == 0 && index3or2==20) {
-					System.out.println();
-					System.out.println("DEBUG ret: " + curMinSquaresCount + " with " + numAttachToTop + " attached to top");
-					System.out.println();
-				}*/
 				ret = curMinSquaresCount;
 				
 				if(numAttachToTop > 0 || topIndexUsed) {
@@ -692,12 +663,6 @@ public class RecursiveMinSquaresNeedToAttach {
 					retComingFromBottom= 0;
 				}
 			} else if(curMinSquaresCount == ret) {
-				
-				//TODO: this is broken!
-				//TODO: What if we have the choice of going from top or from bottom.
-				//In that case, we should be guided to pick one.
-				//TODO: use var: useTopIndexGivenChoice
-				//TODO: test before/after
 				
 				//Check if we could also attach to top/bottom with 0 cost:
 				if(numAttachToTop > 0 || topIndexUsed || retComingFromTop == 1) {
