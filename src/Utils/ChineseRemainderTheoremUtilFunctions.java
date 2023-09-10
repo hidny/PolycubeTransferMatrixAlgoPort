@@ -6,10 +6,12 @@ public class ChineseRemainderTheoremUtilFunctions {
 
 	public static void initialize() {
 		primes = new short[MAX_NUM_RESIDUES];
+		primesBigInteger = new BigInteger[MAX_NUM_RESIDUES];
 		
 		short curMaxPrime = INIT_MAX_PRIME;
 		for(int i=0; i<primes.length; i++) {
 			primes[i] = gethighestPrimeUnderN(curMaxPrime);
+			primesBigInteger[i] = new BigInteger("" + primes[i]);
 			curMaxPrime = primes[i];
 		}
 		
@@ -56,6 +58,20 @@ public class ChineseRemainderTheoremUtilFunctions {
 				ChineseRemainderTheoremUtilFunctions.curProdPrimes);
 	}
 	
+	public static short[] convertBigIntegerToResidues(BigInteger bigInt, int numResidues) {
+		short ret[] = new short[numResidues];
+		
+		for(int i=0; i<ret.length; i++) {
+			ret[i] = (short) bigInt.divideAndRemainder(primesBigInteger[i])[1].shortValue();
+		}
+		
+		return ret;
+	}
+	
+	public static boolean shouldAddNewResidueToDataStruct(short storedResidues[]) {
+		return shouldAddNewResidueToDataStruct(storedResidues, primes, curProdPrimes, inverses);
+	}
+	
 	private static short MAX_NUM_RESIDUES = 10;
 	
 	//TODO: should be 2^15
@@ -63,6 +79,7 @@ public class ChineseRemainderTheoremUtilFunctions {
 	//public static short INIT_MAX_PRIME = (short)Math.pow(2, 15);
 	
 	private static short primes[];
+	private static BigInteger primesBigInteger[];
 
 	private static BigInteger curProdPrimes[] = new BigInteger[MAX_NUM_RESIDUES];
 	private static BigInteger curProdPrimesDiv2[] = new BigInteger[MAX_NUM_RESIDUES];

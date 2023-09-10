@@ -64,17 +64,15 @@ public class PartialGen4Functions {
 		return getStoredResidues(cur, numSquares, getMinSquares(cur), getMaxSquares(cur), getNumResiduesUsed(cur));
 	}
 	
-	//Return null if it's not applicable... (not within min and max)
+	//Returns null if it's not applicable... (not within min and max)
 	public static short[] getStoredResidues(short cur[], int numSquares, int minSquares, int maxSquares, int numResiduesUsed) {
 		
 		if(numSquares < minSquares || numSquares > maxSquares) {
-			
 			return null;
 		}
 
-		//I put all the residues of same num squares together:
-		//Answer: of same numSquares together
-		//that means slightly more work when adding a residue, but whatever.
+		//I put all the residues of same num squares together.
+		//That means slightly more work when adding a residue, but whatever.
 		
 		short ret[] = new short[numResiduesUsed];
 		int firstIndex = 1 + (numSquares - minSquares) * numResiduesUsed;
@@ -82,6 +80,103 @@ public class PartialGen4Functions {
 		for(int i=0; i<numResiduesUsed; i++) {
 			ret[i] = cur[firstIndex + i];
 		}
+		
+		return ret;
+	}
+	
+	
+	public static short[] hardCopyMerge(short cur1[], short cur2[]) {
+		int minSquares1 = getMinSquares(cur1);
+		int maxSquares1 = getMaxSquares(cur1);
+		int numResiduesUsed1 = getNumResiduesUsed(cur1);
+		
+		
+		int minSquares2 = getMinSquares(cur2);
+		int maxSquares2 = getMaxSquares(cur2);
+		int numResiduesUsed2 = getNumResiduesUsed(cur2);
+		
+		int minSquares = Math.min(minSquares1, minSquares2);
+		int maxSquares = Math.min(maxSquares1, maxSquares2);
+		int numResiduesToUse = Math.max(numResiduesUsed1, numResiduesUsed2);
+		
+		//Check if we need to add new residue:
+		boolean addNewResidue = false;
+
+		for(int numSquares=minSquares; numSquares<=maxSquares; numSquares++) {
+			short first[] = getStoredResidues(cur1, numSquares);
+			short second[] = getStoredResidues(cur2, numSquares);
+			
+			BigInteger sum = BigInteger.ZERO;
+			if(first != null) {
+				sum.add(ChineseRemainderTheoremUtilFunctions.deriveTotalBasedOnModResidues(first));
+			}
+			if(second != null) {
+				sum.add(ChineseRemainderTheoremUtilFunctions.deriveTotalBasedOnModResidues(second));
+			}
+			
+			short tmpStoredResidues[] = ChineseRemainderTheoremUtilFunctions.convertBigIntegerToResidues(sum, numResiduesToUse);
+			
+			if(ChineseRemainderTheoremUtilFunctions.shouldAddNewResidueToDataStruct(tmpStoredResidues)) {
+				addNewResidue = true;
+				break;
+			}
+			
+		}
+		
+		if(addNewResidue) {
+			numResiduesToUse++;
+		}
+		//End check if we need to add new residue.
+		
+		short ret[] = new short[1 + numResiduesToUse * (maxSquares - minSquares + 1)];
+		
+		ret[0] = (short)(minSquares * NUM_COMBOS_BYTES + maxSquares);
+		
+		
+		int curIndex = 1;
+		for(int numSquares=minSquares; numSquares<=maxSquares; numSquares++) {
+			short first[] = getStoredResidues(cur1, numSquares);
+			short second[] = getStoredResidues(cur2, numSquares);
+			
+			BigInteger sum = BigInteger.ZERO;
+			if(first != null) {
+				sum.add(ChineseRemainderTheoremUtilFunctions.deriveTotalBasedOnModResidues(first));
+			}
+			if(second != null) {
+				sum.add(ChineseRemainderTheoremUtilFunctions.deriveTotalBasedOnModResidues(second));
+			}
+			
+			short tmpStoredResidues[] = ChineseRemainderTheoremUtilFunctions.convertBigIntegerToResidues(sum, numResiduesToUse);
+			
+			for(int i=0; i<numResiduesToUse; i++) {
+				ret[curIndex + i] = tmpStoredResidues[i];
+			}
+			
+			curIndex += numResiduesToUse;
+		}
+		
+		return ret;
+	}
+
+	//TODO: hardCopyAdd1SquareThough
+	//Note that hardCopyAdd1Square might means reducing the size of the output array, so be careful about that.
+	
+	//TODO: do it right!
+	public static short[] hardCopyAdd1SquareThough(short cur[], int maxForNumSquaresTarget) {
+		
+		short ret[] = new short[cur.length];
+		
+		for(int i=0; i<ret.length; i++) {
+			ret[i] = cur[i];
+		}
+
+		int minSquares = getMinSquares(cur) + 1;
+		int maxSquares = getMaxSquares(cur) + 1;
+		
+		//TODO: if maxSquares goes over limit, there's more work to be done!
+		
+		ret[0] = (short)(minSquares * NUM_COMBOS_BYTES + maxSquares);
+		
 		
 		return ret;
 	}
@@ -112,12 +207,11 @@ public class PartialGen4Functions {
 	}
 	
 	//TODO: test
-	public BigInteger getEnuration(short cur[], int numSquares) {
+	public static BigInteger getEnuration(short cur[], int numSquares) {
 		int minSquares = getMinSquares(cur);
 		int maxSquares = getMaxSquares(cur);
 		int numResiduesUsed = getNumResiduesUsed(cur);
 		
-		long ret = 0;
 		
 		if(numSquares >= minSquares && numSquares <= maxSquares) {
 			short storedResidues[] = getStoredResidues(cur, numSquares, minSquares, maxSquares, numResiduesUsed);
