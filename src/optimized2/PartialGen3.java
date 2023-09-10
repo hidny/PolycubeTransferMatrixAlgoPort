@@ -96,7 +96,7 @@ Update: I got away with it!
 		return new PartialGen3(ret, retMin, retMax);
 	}
 	
-	public void printBoundary(int length) {
+	public void printEnumerationsForBoundary(int length) {
 		
 		for(int i=0; i<length; i++) {
 			

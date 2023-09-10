@@ -1,6 +1,10 @@
 package optimized3;
 
-public class PartialGen4Helper {
+import java.math.BigInteger;
+
+import Utils.ChineseRemainderTheoremUtilFunctions;
+
+public class PartialGen4Functions {
 
 	//Idea:
 	// Datastruct is just a growable short array and this class contains the helper method to navigate the operations required on that short array
@@ -16,6 +20,30 @@ public class PartialGen4Helper {
 	public static int NUM_BITES_IN_BYTE = 8;
 	public static int NUM_COMBOS_BYTES = (int)Math.pow(2, NUM_BITES_IN_BYTE);
 	public static int SIZE_DESC_INDEX = 0;
+	
+	public static short[] getInitialPartialGen() {
+		
+		short ret[] = new short[2];
+		
+		ret[0] = 0;
+		ret[1] = 1;
+		
+		return ret;
+	}
+	
+	public static short[] hardCopy(short cur[]) {
+		
+		//TODO: avoid copying overly simple short arrays...
+		//There's a lot of opportunity to save space for the simple arrays.
+		
+		short ret[] = new short[cur.length];
+		
+		for(int i=0; i<ret.length; i++) {
+			ret[i] = cur[i];
+		}
+		
+		return ret;
+	}
 	
 	public static int getMinSquares(short cur[]) {
 		return cur[SIZE_DESC_INDEX] >> NUM_BITES_IN_BYTE;
@@ -56,6 +84,50 @@ public class PartialGen4Helper {
 		}
 		
 		return ret;
+	}
+	
+	//TODO: test this debug function...
+	public void printEnumerationsForBoundary(short cur[], int length) {
+		
+		int minSquares = getMinSquares(cur);
+		int maxSquares = getMaxSquares(cur);
+		int numResiduesUsed = getNumResiduesUsed(cur);
+
+		
+		for(int i=0; i<length; i++) {
+			
+			if(i >= minSquares && i <= maxSquares) {
+				
+				short storedResidues[] = getStoredResidues(cur, i, minSquares, maxSquares, numResiduesUsed);
+				
+				System.out.print(ChineseRemainderTheoremUtilFunctions.deriveTotalBasedOnModResidues(storedResidues));
+				
+			}
+			
+			System.out.print(cur + ", ");
+
+		}
+		System.out.println();
+		
+	}
+	
+	//TODO: test
+	public BigInteger getEnuration(short cur[], int numSquares) {
+		int minSquares = getMinSquares(cur);
+		int maxSquares = getMaxSquares(cur);
+		int numResiduesUsed = getNumResiduesUsed(cur);
+		
+		long ret = 0;
+		
+		if(numSquares >= minSquares && numSquares <= maxSquares) {
+			short storedResidues[] = getStoredResidues(cur, numSquares, minSquares, maxSquares, numResiduesUsed);
+
+			return ChineseRemainderTheoremUtilFunctions.deriveTotalBasedOnModResidues(storedResidues);
+
+		} else {
+			return BigInteger.ZERO;
+		}
+		
 	}
 	
 	
@@ -105,6 +177,7 @@ public class PartialGen4Helper {
 			}
 		}
 		System.out.println("(Expects 1, 2, 3, 4)");
+		
 	}
 	
 	
