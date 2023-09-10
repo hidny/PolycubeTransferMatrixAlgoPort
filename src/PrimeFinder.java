@@ -51,11 +51,11 @@ public class PrimeFinder {
 			System.out.println();
 		}
 		
-		int NUM_PRIMES = 3;
+		int START_SIZE = 1;
 		
-		short testStorage[] = new short[NUM_PRIMES];
+		short testStorage[] = new short[START_SIZE];
 		
-		for(int i=0; i<NUM_PRIMES; i++) {
+		for(int i=0; i<testStorage.length; i++) {
 			testStorage[i] = (short)0;
 		}
 		
@@ -68,20 +68,27 @@ public class PrimeFinder {
 		for(int i=0; i<1000000001; i++) {
 			
 			
-			for(int j=0; j<NUM_PRIMES; j++) {
+			for(int j=0; j<testStorage.length; j++) {
 				testStorage[j] = (short) ((testStorage[j] + MULT) % primes[j]);
 			}
 			
 			BigInteger tmp1 = new BigInteger((MULT*(i+1)) + "");
 			//BigInteger tmp2 = deriveTotalBasedOnMods(testStorage, primes, inverses);
 			BigInteger tmp2 = deriveTotalBasedOnMods2(testStorage, primes, curProdPrimes, inverses);
+			
+			if(tmp2.compareTo(curProdPrimes[testStorage.length - 1].divide(new BigInteger("2"))) > 0) {
+				//System.exit(1);
+				System.out.println("PROMOTE " + testStorage.length);
+				testStorage = promoteNewPrime(testStorage, primes, curProdPrimes, inverses);
+			}
+			
 			if(tmp1.compareTo(tmp2) != 0) {
 				System.out.println("ERROR: " + tmp1 + " vs " + tmp2);
 				
 				System.out.println("Primes used:");
 				
 				long prod = 1L;
-				for(int j=0; j<NUM_PRIMES; j++) {
+				for(int j=0; j<testStorage.length; j++) {
 					System.out.println(primes[j]);
 					prod *= primes[j];
 				}
@@ -90,12 +97,28 @@ public class PrimeFinder {
 				
 				System.exit(1);
 			} else {
-				System.out.println(tmp2);
+				//System.out.println(tmp2);
 			}
 			
 		}
 		
+	}
+	
+	public static short[] promoteNewPrime(short storedMods[], short primes[], BigInteger curProdPrimes[], BigInteger inverses[]) {
 		
+		short ret[] = new short[storedMods.length + 1];
+		
+		for(int i=0; i<storedMods.length; i++) {
+			ret[i] = storedMods[i];
+		}
+		
+		int newPrimeIndex = ret.length - 1;
+		
+		ret[newPrimeIndex] = deriveTotalBasedOnMods2(storedMods, primes, curProdPrimes, inverses)
+				.divideAndRemainder(new BigInteger("" + primes[newPrimeIndex]))[1].shortValue();
+		
+		
+		return ret;
 	}
 
 	//TODO: test that this works with more primes
