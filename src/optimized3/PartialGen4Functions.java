@@ -112,24 +112,7 @@ public class PartialGen4Functions {
 				sum = sum.add(ChineseRemainderTheoremUtilFunctions.deriveTotalBasedOnModResidues(second));
 			}
 
-			
-			short tmpStoredResidues[] = ChineseRemainderTheoremUtilFunctions.convertBigIntegerToResidues(sum, numResiduesToUse);
-			
-			if(sum.compareTo(ChineseRemainderTheoremUtilFunctions.deriveTotalBasedOnModResidues(tmpStoredResidues)) != 0) {
-				
-				System.out.println("ERROR!");
-				System.out.println(sum);
-				System.out.println("vs");
-				System.out.println(ChineseRemainderTheoremUtilFunctions.deriveTotalBasedOnModResidues(tmpStoredResidues));
-				System.out.println("think");
-				for(int i=0; i<2; i++) {
-					System.out.println(ChineseRemainderTheoremUtilFunctions.primes[i]);
-					System.out.println(ChineseRemainderTheoremUtilFunctions.primesBigInteger[i]);
-				}
-				System.exit(1);
-			}
-			
-			if(ChineseRemainderTheoremUtilFunctions.shouldAddNewResidueToDataStruct(tmpStoredResidues)) {
+			if(ChineseRemainderTheoremUtilFunctions.shouldAddNewResidueToDataStruct(sum, numResiduesToUse)) {
 				
 				addNewResidue = true;
 				break;

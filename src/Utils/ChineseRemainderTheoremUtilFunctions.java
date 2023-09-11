@@ -91,6 +91,10 @@ public class ChineseRemainderTheoremUtilFunctions {
 		return shouldAddNewResidueToDataStruct(storedResidues, primes, curProdPrimes, inverses);
 	}
 	
+	
+	public static boolean shouldAddNewResidueToDataStruct(BigInteger num, int curNumResidues) {
+		return num.compareTo(curProdPrimesDiv2[curNumResidues - 1]) > 0;
+	}
 
 	private short[] addNewResidueToDataStructIfApplicableInner(short storedResidues[], short primes[], BigInteger curProdPrimes[], BigInteger inverses[]) {
 		
