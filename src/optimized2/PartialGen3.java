@@ -96,9 +96,9 @@ Update: I got away with it!
 		return new PartialGen3(ret, retMin, retMax);
 	}
 	
-	public void printEnumerationsForBoundary(int length) {
+	public void printEnumerationsForBoundary(int numSquares) {
 		
-		for(int i=0; i<length; i++) {
+		for(int i=0; i<numSquares + 1; i++) {
 			
 			long cur = 0;
 			

@@ -32,7 +32,7 @@ public class MainVersion5 {
 		
 		initLowerTwoDissapeared();
 		
-		//solve(10);
+		//solve(5);
 		
 		testArray();
 		//System.out.println("Num hashes removed: " + debugTooBig);
@@ -40,7 +40,7 @@ public class MainVersion5 {
 	
 	public static void testArray() {
 		
-		int MAX = 40;
+		int MAX = 10;
 		
 		BigInteger output[] = new BigInteger[MAX + 1];
 		for(int i=0; i<MAX + 1; i++) {
@@ -173,6 +173,8 @@ Final number for N = 39: 2146745613912593599828 ( 5 hours?) (It's wrong! long ty
 	
 	public static BigInteger solve(int numSquares) {
 		
+		System.out.println("START");
+		
 		if(numSquares == 0) {
 			return BigInteger.ONE;
 		}
@@ -186,6 +188,10 @@ Final number for N = 39: 2146745613912593599828 ( 5 hours?) (It's wrong! long ty
 		
 		
 		for(int width=1; width<=maxWidth; width++) {
+			System.out.println();
+			System.out.println();
+			System.out.println();
+			System.out.println("CUR WIDTH: " + width);
 			
 			short curPartail[] = PartialGen4Functions.getInitialPartialGen();
 			
@@ -197,12 +203,16 @@ Final number for N = 39: 2146745613912593599828 ( 5 hours?) (It's wrong! long ty
 			
 			//I added +5 at the end just in case it matters, but I think it doesn't.
 			for(int length=1; length <= numSquares - width + 1 + 5; length++) {
-				
-				//System.out.println("CUR LENGTH: " + length);
+
+				System.out.println();
+				System.out.println();
+				System.out.println("CUR LENGTH: " + length);
 				
 				int minLengthToGo = Math.max(0, width - length);
 				
 				for(int i=0; i<width; i++) {
+					System.out.println();
+					System.out.println("CUR i/kink: " + i);
 					
 					curConfigs = new HashMap<Long, short[]>();
 					
@@ -216,13 +226,27 @@ Final number for N = 39: 2146745613912593599828 ( 5 hours?) (It's wrong! long ty
 				    	short prevPartialGen[] = prevConfigs.get(entry.getKey());
 						
 						long curSignature = entry.getKey();
-						
-						
-						int boundaryLine[] =  getBoundaryLineFromSignature(curSignature, width);
-						
+
 						boolean origUpperBorderTouched = ((curSignature % 4) /2) == 1;
 						boolean origLowerBorderTouched = (curSignature % 2) == 1;
 
+						System.out.println("----");
+						
+						int boundaryLine[] =  getBoundaryLineFromSignature(curSignature, width);
+						for(int j=0; j<boundaryLine.length; j++) {
+							System.out.println(boundaryLine[j]);
+						}
+						if(origUpperBorderTouched) {
+							System.out.println("top touched");
+						}
+						if(origLowerBorderTouched) {
+							System.out.println("Bottom touched");
+						}
+						System.out.println("Partial GEN:");
+						PartialGen4Functions.printEnumerationsForBoundary(prevPartialGen, numSquares);
+
+						System.out.println("----");
+						
 						int origTop = 0;
 						int origBottom = 0;
 						
@@ -269,12 +293,22 @@ Final number for N = 39: 2146745613912593599828 ( 5 hours?) (It's wrong! long ty
 										if(length > width && origUpperBorderTouched && origLowerBorderTouched) {
 											BigInteger numSolutions = PartialGen4Functions.getEnuration(prevConfigs.get(curSignature), numSquares);
 											
+											/*int tmp[] = getBoundaryLineFromSignature(curSignature, width);
+											System.out.println("Boundary line:");
+											for(int j=0; j<tmp.length; j++) {
+												System.out.print(tmp[j] + ", " );
+											}
+											System.out.println();
+											System.out.println("End boundary line");
+											*/
 											if(length == width + 1) {
+												//System.out.println(numSolutions);
 
 												ret = ret.add(numSolutions);
 											} else {
+												//System.out.println(numSolutions.multiply(TWO));
 
-												ret = ret.add(numSolutions.multiply(TWO));								
+												ret = ret.add(numSolutions.multiply(TWO));						
 											}
 										}
 										
@@ -447,13 +481,15 @@ Final number for N = 39: 2146745613912593599828 ( 5 hours?) (It's wrong! long ty
 										// adds more memory:
 										
 										curConfigs.put(newSignature, PartialGen4Functions.hardCopyMerge(
-												prevPartialGen,
+												curConfigs.get(newSignature),
 												PartialGen4Functions.hardCopyAdd1SquareThough(prevPartialGen, maxSquaresAllowedForSignature))
 											);
 										
 									} else {
 										
-										curConfigs.put(newSignature, PartialGen4Functions.hardCopyAdd1SquareThough(prevPartialGen, maxSquaresAllowedForSignature));
+										curConfigs.put(newSignature, PartialGen4Functions.hardCopyAdd1SquareThough(
+												prevPartialGen,
+												maxSquaresAllowedForSignature));
 										
 	
 									}

@@ -86,6 +86,7 @@ public class PartialGen4Functions {
 	
 	
 	public static short[] hardCopyMerge(short cur1[], short cur2[]) {
+		System.out.println("hardCopyMerge");
 		int minSquares1 = getMinSquares(cur1);
 		int maxSquares1 = getMaxSquares(cur1);
 		int numResiduesUsed1 = getNumResiduesUsed(cur1);
@@ -96,7 +97,7 @@ public class PartialGen4Functions {
 		int numResiduesUsed2 = getNumResiduesUsed(cur2);
 		
 		int minSquares = Math.min(minSquares1, minSquares2);
-		int maxSquares = Math.min(maxSquares1, maxSquares2);
+		int maxSquares = Math.max(maxSquares1, maxSquares2);
 		int numResiduesToUse = Math.max(numResiduesUsed1, numResiduesUsed2);
 		
 		//Check if we need to add new residue:
@@ -108,15 +109,32 @@ public class PartialGen4Functions {
 			
 			BigInteger sum = BigInteger.ZERO;
 			if(first != null) {
-				sum.add(ChineseRemainderTheoremUtilFunctions.deriveTotalBasedOnModResidues(first));
+				sum = sum.add(ChineseRemainderTheoremUtilFunctions.deriveTotalBasedOnModResidues(first));
 			}
 			if(second != null) {
-				sum.add(ChineseRemainderTheoremUtilFunctions.deriveTotalBasedOnModResidues(second));
+				sum = sum.add(ChineseRemainderTheoremUtilFunctions.deriveTotalBasedOnModResidues(second));
 			}
+
+			//System.out.println("Sum: " + sum);
 			
 			short tmpStoredResidues[] = ChineseRemainderTheoremUtilFunctions.convertBigIntegerToResidues(sum, numResiduesToUse);
 			
+			if(sum.compareTo(ChineseRemainderTheoremUtilFunctions.deriveTotalBasedOnModResidues(tmpStoredResidues)) != 0) {
+				
+				System.out.println("ERROR!");
+				System.out.println(sum);
+				System.out.println("vs");
+				System.out.println(ChineseRemainderTheoremUtilFunctions.deriveTotalBasedOnModResidues(tmpStoredResidues));
+				System.out.println("think");
+				for(int i=0; i<2; i++) {
+					System.out.println(ChineseRemainderTheoremUtilFunctions.primes[i]);
+					System.out.println(ChineseRemainderTheoremUtilFunctions.primesBigInteger[i]);
+				}
+				System.exit(1);
+			}
+			
 			if(ChineseRemainderTheoremUtilFunctions.shouldAddNewResidueToDataStruct(tmpStoredResidues)) {
+				
 				addNewResidue = true;
 				break;
 			}
@@ -125,6 +143,7 @@ public class PartialGen4Functions {
 		
 		if(addNewResidue) {
 			numResiduesToUse++;
+			System.out.println("Adding residue: " + numResiduesToUse);
 		}
 		//End check if we need to add new residue.
 		
@@ -140,12 +159,12 @@ public class PartialGen4Functions {
 			
 			BigInteger sum = BigInteger.ZERO;
 			if(first != null) {
-				sum.add(ChineseRemainderTheoremUtilFunctions.deriveTotalBasedOnModResidues(first));
+				sum = sum.add(ChineseRemainderTheoremUtilFunctions.deriveTotalBasedOnModResidues(first));
 			}
 			if(second != null) {
-				sum.add(ChineseRemainderTheoremUtilFunctions.deriveTotalBasedOnModResidues(second));
+				sum = sum.add(ChineseRemainderTheoremUtilFunctions.deriveTotalBasedOnModResidues(second));
 			}
-			
+
 			short tmpStoredResidues[] = ChineseRemainderTheoremUtilFunctions.convertBigIntegerToResidues(sum, numResiduesToUse);
 			
 			for(int i=0; i<numResiduesToUse; i++) {
@@ -163,6 +182,7 @@ public class PartialGen4Functions {
 	
 	//TODO: do it right!
 	public static short[] hardCopyAdd1SquareThough(short cur[], int maxForNumSquaresTarget) {
+		//System.out.println("hardCopyAdd1SquareThough");
 		
 		short ret[] = new short[cur.length];
 		
@@ -182,25 +202,25 @@ public class PartialGen4Functions {
 	}
 	
 	//TODO: test this debug function...
-	public void printEnumerationsForBoundary(short cur[], int length) {
+	public static void printEnumerationsForBoundary(short cur[], int numSquares) {
 		
 		int minSquares = getMinSquares(cur);
 		int maxSquares = getMaxSquares(cur);
 		int numResiduesUsed = getNumResiduesUsed(cur);
 
 		
-		for(int i=0; i<length; i++) {
+		for(int i=0; i<numSquares + 1; i++) {
 			
 			if(i >= minSquares && i <= maxSquares) {
 				
 				short storedResidues[] = getStoredResidues(cur, i, minSquares, maxSquares, numResiduesUsed);
 				
-				System.out.print(ChineseRemainderTheoremUtilFunctions.deriveTotalBasedOnModResidues(storedResidues));
+				System.out.print(ChineseRemainderTheoremUtilFunctions.deriveTotalBasedOnModResidues(storedResidues) + ", ");
 				
-			}
+			} else {
 			
-			System.out.print(cur + ", ");
-
+				System.out.print("0, ");
+			}
 		}
 		System.out.println();
 		

@@ -2,7 +2,26 @@ package Utils;
 import java.math.BigInteger;
 
 public class ChineseRemainderTheoremUtilFunctions {
+
+
+	private static short MAX_NUM_RESIDUES = 10;
 	
+	//private static short INIT_MAX_PRIME = 100;
+	public static short INIT_MAX_PRIME = (short)Math.pow(2, 15);
+	
+	//TODO: make private:
+	public static short primes[];
+	public static BigInteger primesBigInteger[];
+
+	private static BigInteger curProdPrimes[] = new BigInteger[MAX_NUM_RESIDUES];
+	private static BigInteger curProdPrimesDiv2[] = new BigInteger[MAX_NUM_RESIDUES];
+	
+	private static BigInteger inverses[] = new BigInteger[MAX_NUM_RESIDUES];
+	
+	
+	static {
+		initialize();
+	}
 
 	public static void initialize() {
 		primes = new short[MAX_NUM_RESIDUES];
@@ -55,12 +74,12 @@ public class ChineseRemainderTheoremUtilFunctions {
 		return deriveTotalBasedOnModResiduesInner(storedResidues, 
 				ChineseRemainderTheoremUtilFunctions.primes,
 				ChineseRemainderTheoremUtilFunctions.curProdPrimes,
-				ChineseRemainderTheoremUtilFunctions.curProdPrimes);
+				ChineseRemainderTheoremUtilFunctions.inverses);
 	}
 	
 	public static short[] convertBigIntegerToResidues(BigInteger bigInt, int numResidues) {
 		short ret[] = new short[numResidues];
-		
+
 		for(int i=0; i<ret.length; i++) {
 			ret[i] = (short) bigInt.divideAndRemainder(primesBigInteger[i])[1].shortValue();
 		}
@@ -71,20 +90,6 @@ public class ChineseRemainderTheoremUtilFunctions {
 	public static boolean shouldAddNewResidueToDataStruct(short storedResidues[]) {
 		return shouldAddNewResidueToDataStruct(storedResidues, primes, curProdPrimes, inverses);
 	}
-	
-	private static short MAX_NUM_RESIDUES = 10;
-	
-	//TODO: should be 2^15
-	private static short INIT_MAX_PRIME = 100;
-	//public static short INIT_MAX_PRIME = (short)Math.pow(2, 15);
-	
-	private static short primes[];
-	private static BigInteger primesBigInteger[];
-
-	private static BigInteger curProdPrimes[] = new BigInteger[MAX_NUM_RESIDUES];
-	private static BigInteger curProdPrimesDiv2[] = new BigInteger[MAX_NUM_RESIDUES];
-	
-	private static BigInteger inverses[] = new BigInteger[MAX_NUM_RESIDUES];
 	
 
 	private short[] addNewResidueToDataStructIfApplicableInner(short storedResidues[], short primes[], BigInteger curProdPrimes[], BigInteger inverses[]) {
@@ -243,8 +248,8 @@ public class ChineseRemainderTheoremUtilFunctions {
 		
 		int TEST_MULT = 1;
 		
-		//TODO: increase storage when i is half way there...
-		//TODO: make this easier to use for the purpose of the data structure.
+		//DONE: increase storage when i is half way there...
+		//DONE: make this easier to use for the purpose of the data structure.
 		for(int i=0; i<1000000001; i++) {
 			
 			
