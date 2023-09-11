@@ -112,7 +112,6 @@ public class PartialGen4Functions {
 				sum = sum.add(ChineseRemainderTheoremUtilFunctions.deriveTotalBasedOnModResidues(second));
 			}
 
-			//System.out.println("Sum: " + sum);
 			
 			short tmpStoredResidues[] = ChineseRemainderTheoremUtilFunctions.convertBigIntegerToResidues(sum, numResiduesToUse);
 			
@@ -140,7 +139,6 @@ public class PartialGen4Functions {
 		
 		if(addNewResidue) {
 			numResiduesToUse++;
-			System.out.println("Adding residue: " + numResiduesToUse);
 		}
 		//End check if we need to add new residue.
 		
@@ -179,9 +177,6 @@ public class PartialGen4Functions {
 	
 	//TODO: do it right!
 	public static short[] hardCopyAdd1SquareThough(short cur[], int maxForNumSquaresTarget) {
-		System.out.println("hardCopyAdd1SquareThough");
-		
-		
 
 		int minSquares = getMinSquares(cur) + 1;
 		int maxSquares = getMaxSquares(cur) + 1;

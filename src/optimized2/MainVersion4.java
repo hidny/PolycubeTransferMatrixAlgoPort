@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-
 public class MainVersion4 {
 
 	//goal:
@@ -31,9 +30,9 @@ public class MainVersion4 {
 		
 		initLowerTwoDissapeared();
 		
-		solve(3);
+		//solve(10);
 		
-		//testArray();
+		testArray();
 		//System.out.println("Num hashes removed: " + debugTooBig);
 	}
 	
@@ -185,10 +184,6 @@ Final number for N = 39: 2146745613912593599828 ( 5 hours?) (It's wrong! long ty
 		
 		
 		for(int width=1; width<=maxWidth; width++) {
-			System.out.println();
-			System.out.println();
-			System.out.println();
-			System.out.println("CUR WIDTH: " + width);
 			
 			PartialGen3 curPartial = new PartialGen3();
 			curPartial.numAnimals[0] = 1L;
@@ -201,16 +196,12 @@ Final number for N = 39: 2146745613912593599828 ( 5 hours?) (It's wrong! long ty
 			
 			//I added +5 at the end just in case it matters, but I think it doesn't.
 			for(int length=1; length <= numSquares - width + 1 + 5; length++) {
-
-				System.out.println();
-				System.out.println();
-				System.out.println("CUR LENGTH: " + length);
+				
+				//System.out.println("CUR LENGTH: " + length);
 				
 				int minLengthToGo = Math.max(0, width - length);
 				
 				for(int i=0; i<width; i++) {
-					System.out.println();
-					System.out.println("CUR i/kink: " + i);
 					
 					curConfigs = new HashMap<Long, PartialGen3>();
 					
@@ -224,26 +215,12 @@ Final number for N = 39: 2146745613912593599828 ( 5 hours?) (It's wrong! long ty
 						PartialGen3 prevPartialGen = prevConfigs.get(entry.getKey());
 						
 						long curSignature = entry.getKey();
-
+						
+						
+						int boundaryLine[] =  getBoundaryLineFromSignature(curSignature, width);
+						
 						boolean origUpperBorderTouched = ((curSignature % 4) /2) == 1;
 						boolean origLowerBorderTouched = (curSignature % 2) == 1;
-
-						System.out.println("----");
-						int boundaryLine[] =  getBoundaryLineFromSignature(curSignature, width);
-						for(int j=0; j<boundaryLine.length; j++) {
-							System.out.println(boundaryLine[j]);
-						}
-						
-						if(origUpperBorderTouched) {
-							System.out.println("top touched");
-						}
-						if(origLowerBorderTouched) {
-							System.out.println("Bottom touched");
-						}
-
-						System.out.println("Partial GEN:");
-						prevPartialGen.printEnumerationsForBoundary(numSquares);
-						System.out.println("----");
 
 						int origTop = 0;
 						int origBottom = 0;
