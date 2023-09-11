@@ -40,7 +40,7 @@ public class MainVersion5 {
 	
 	public static void testArray() {
 		
-		int MAX = 10;
+		int MAX = 12;
 		
 		BigInteger output[] = new BigInteger[MAX + 1];
 		for(int i=0; i<MAX + 1; i++) {
@@ -470,7 +470,7 @@ Final number for N = 39: 2146745613912593599828 ( 5 hours?) (It's wrong! long ty
 								
 								int maxSquaresAllowedForSignature = numSquares - (getNumToAddToCompleteBasedOnSignature(newSignature, width, minLengthToGo) + minLengthToGo);
 								
-								if(maxSquaresAllowedForSignature < PartialGen4Functions.getMinSquares(prevPartialGen)) {
+								if(maxSquaresAllowedForSignature < PartialGen4Functions.getMinSquares(prevPartialGen) + 1) {
 									//Nope
 								} else {
 								

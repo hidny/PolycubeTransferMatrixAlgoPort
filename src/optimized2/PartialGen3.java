@@ -86,8 +86,6 @@ Update: I got away with it!
 		
 		long ret[] = new long[retMax - retMin + 1];
 		
-		ret[0] = 0L;
-		
 		for(int i=0; i<ret.length; i++) {
 			ret[i] = pg.numAnimals[i];
 		}

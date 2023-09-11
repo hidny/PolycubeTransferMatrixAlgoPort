@@ -12,10 +12,8 @@ public class PartialGen4Functions {
 	
 	//1st index is short that has 1 byte for min and 1 byte for max.
 	
-	//TODO: make helper functions to handle everything PartialGen3 can do...
-	//Including the constructor and the helper functions.
 	
-	//TODO: reused functions in PrimeFinder as much as possible.
+	//I reused functions in PrimeFinder as much as possible.
 
 	public static int NUM_BITES_IN_BYTE = 8;
 	public static int NUM_COMBOS_BYTES = (int)Math.pow(2, NUM_BITES_IN_BYTE);
@@ -86,7 +84,6 @@ public class PartialGen4Functions {
 	
 	
 	public static short[] hardCopyMerge(short cur1[], short cur2[]) {
-		System.out.println("hardCopyMerge");
 		int minSquares1 = getMinSquares(cur1);
 		int maxSquares1 = getMaxSquares(cur1);
 		int numResiduesUsed1 = getNumResiduesUsed(cur1);
@@ -182,26 +179,43 @@ public class PartialGen4Functions {
 	
 	//TODO: do it right!
 	public static short[] hardCopyAdd1SquareThough(short cur[], int maxForNumSquaresTarget) {
-		//System.out.println("hardCopyAdd1SquareThough");
+		System.out.println("hardCopyAdd1SquareThough");
 		
-		short ret[] = new short[cur.length];
 		
-		for(int i=0; i<ret.length; i++) {
-			ret[i] = cur[i];
-		}
 
 		int minSquares = getMinSquares(cur) + 1;
 		int maxSquares = getMaxSquares(cur) + 1;
 		
-		//TODO: if maxSquares goes over limit, there's more work to be done!
+		short ret[] = null;
+		
+		if(maxSquares <= maxForNumSquaresTarget) {
+			//TODO: if maxSquares goes over limit, there's more work to be done!
+			
+			ret = new short[cur.length];
+			
+		} else if(minSquares > maxForNumSquaresTarget) {
+			System.out.println("ERROR: min squares is too high in hardCopyAdd1SquareThough");
+			System.exit(1);
+			return null;
+		
+		} else {
+			maxSquares = maxForNumSquaresTarget;
+			int numResiduesToUse = getNumResiduesUsed(cur);
+			
+			ret = new short[1 + numResiduesToUse * (maxSquares - minSquares + 1)];
+		}
+		
+
+		for(int i=0; i<ret.length; i++) {
+			ret[i] = cur[i];
+		}
 		
 		ret[0] = (short)(minSquares * NUM_COMBOS_BYTES + maxSquares);
-		
 		
 		return ret;
 	}
 	
-	//TODO: test this debug function...
+
 	public static void printEnumerationsForBoundary(short cur[], int numSquares) {
 		
 		int minSquares = getMinSquares(cur);
@@ -225,8 +239,7 @@ public class PartialGen4Functions {
 		System.out.println();
 		
 	}
-	
-	//TODO: test
+
 	public static BigInteger getEnuration(short cur[], int numSquares) {
 		int minSquares = getMinSquares(cur);
 		int maxSquares = getMaxSquares(cur);
