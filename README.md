@@ -10,7 +10,7 @@ September 11, 2018"
 
 The reason I wanted to do it is because I thought the algorithm described in the paper was fast and interesting.
 
-I also plan to make variants of it that find the number of 2-way rotational symmetries, and the number 2-way reflections.
+I also plan to make variants of it that find the number of 2-way rotational symmetries, and the number of 2-way reflections.
 
 Based on the thought experiments I've had, I believe that Iwan Jensen's algorithm can be modified to find all the 180 degree rotations of the 2D lattice,
 and all the 2-way reflections of the 2D lattice. I also believe that finding the number of fixed solutions for N squares is more compute heavy than finding the symmetries
@@ -33,10 +33,9 @@ Kevin Gong's website:
 http://kevingong.com/Polyominoes/Enumeration.html
 
 
-
 Notable diffs between the paper's algo and my algo:
 
-1) My signature implementation is more compact because I want to save space and not use anything more complex than a 64 bit number.
+1) My signature implementation is more compact because I want to save space and not use anything more complex than a 64-bit number.
 
 2) I had to be creative with how to figure out if the min num squares is too high. The paper didn't go into details about it, so I came up with something on my own.
 It involved 3 functions where 2 of them call each other recursively. There might be a better way, but I couldn't figure it out.
@@ -54,13 +53,12 @@ Current progress:
 As of this writing, my program was able to correctly calculate from N=1 to 38.
 At N=39, the number of solutions overflowed, and the space usage got close to the maximum.
 I'm hoping that that version 7 will be able to get to N=42. It's a far cry from Iwan Jensen's N=56 result...
-I'm guessing his algo was faster, and he had more hardware...
+I'm guessing his algo is faster, and he had more hardware...
  
 Current plan:
-I'm planning on improving the readme file and seeing how far version 7 will take me.
+I'm planning on improving this README file and seeing how far version 7 will take me.
 After Version 7 finishes running, I think I'll take a small break from this project and from making variants of this algorithm because I'm prioritizing another coding project.
 I'll definitely resume working on this project next year. It just seems very promising...
-
 
 
 Evolution of the Program:
@@ -92,7 +90,7 @@ Repeated the ideas of MainVersion5.java, but had the utility function use the lo
 MainVersion7.java:
 Simplified V5 and V6 by having every single stored number have 8 residues of primes barely lower than 2^15 no matter what.
 This saved a lot of time because I could avoid functions that check how many residues we need. (It's always 8!)
-This is almost as fast as version 4, but it doesn't overflow and there's space savings because V4 used a class to hold the partial gen while this version just uses a short array (array of 16 bit numbers).
+This is almost as fast as version 4, but it doesn't overflow and there's space savings because V4 used a class to hold the partial generating function results while this version just uses a short array (array of 16 bit numbers).
 
-Future version:
-In future, I could look into doing special logic for when the num solutions is less than 2^15, like having them share arrays to save space, but I'm not too motivated to do that.
+Future version(s):
+In the future, I could look into doing special logic for when the number of solutions is less than 2^15, but I'm not too motivated to do that. (For example: having the low enumeration counts share arrays to save space...)
