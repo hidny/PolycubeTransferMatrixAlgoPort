@@ -94,8 +94,7 @@ Final number for N = 35: 18027932215016128134 (1.5 hours?)
 Final number for N = 36: 71242712815411950635 (3 hours?)
 Final number for N = 37: 281746550485032531911 (2 hours?)
 Final number for N = 38: 1115021869572604692100 (5 hours ?)
-Final number for N = 39: 2146745613912593599828 ( 5 hours?) (It's wrong! long type finally failed me...)
-// long overflow: (expectedAns - ans)/2^(64-1) = (4415695134978868448596-2146745613912593599828)/2^63 = 246. Looks like it overflowed 246 times...
+Final number for N = 39: 4415695134978868448596 ( 7.5 hours from N=1)
 
 	 */
 
